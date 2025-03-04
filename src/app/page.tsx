@@ -1,23 +1,21 @@
-// import { Suspense } from "react";
-// import { supabase } from "@/lib/supabase";
-// import HeroBanner from "@/components/hero-banner";
-// import FilmCarousel from "@/components/film-carousel";
-// import { getFeaturedFilm, getFilms, getFilmsByType } from "@/actions/films";
+import { Suspense } from "react";
+import { getFeaturedFilm, getFilms, getFilmsByGenre } from "@/actions/films";
+import FilmCarousel from "@/components/film-carousel";
+import HeroBanner from "@/components/hero-banner";
 
 export default async function Home() {
-  // const [allFilms, movies, tvShows, featuredFilm] = await Promise.all([
-  //   getFilms(),
-  //   getFilmsByType("MOVIE"),
-  //   getFilmsByType("TV_SHOW"),
-  //   getFeaturedFilm(),
-  // ]);
+  const [allFilms, movies, tvShows, featuredFilm] = await Promise.all([
+    getFilms(),
+    getFilmsByGenre("DRAMA"),
+    getFilmsByGenre("ACTION"),
+    getFeaturedFilm(),
+  ]);
 
-  // Create trending films (just a subset of all films for demo)
-  // const trendingFilms = allFilms.slice(0, 10);
+  const trendingFilms = allFilms.slice(0, 10);
 
   return (
     <section>
-      {/* <Suspense fallback={<div className="h-[70vh] bg-black"></div>}>
+      <Suspense fallback={<div className="h-[70vh] bg-black"></div>}>
         {featuredFilm && <HeroBanner film={featuredFilm} />}
       </Suspense>
 
@@ -37,7 +35,7 @@ export default async function Home() {
         <Suspense fallback={<div className="h-60 bg-black"></div>}>
           <FilmCarousel title="New Releases" films={allFilms.slice(5, 15)} />
         </Suspense>
-      </div> */}
+      </div>
     </section>
   );
 }

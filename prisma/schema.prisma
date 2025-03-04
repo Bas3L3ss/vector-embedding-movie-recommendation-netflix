@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+model Movie {
+  id              BigInt     @id @default(autoincrement())
+  title           String     @db.VarChar(255)
+  description     String?
+  releaseYear     Int
+  genre           Genre[]    
+  director        String?    @db.VarChar(255)
+  cast            String[]    // Can store JSON or comma-separated string
+  duration        Int        @db.Integer   // Minutes
+  language        String[]    @db.VarChar(50)
+  country         String?    @db.VarChar(100)
+  rating          Decimal?   @db.Decimal(3,1)   // IMDb-style rating
+  featured        Boolean
+  posterUrl       String[]    @db.VarChar(255) // Image URL
+  trailerUrl      String[]    @db.VarChar(255) // YouTube or other sources
+  videoUrl        String[]    @db.VarChar(255) // Movie source link
+  embedding       Unsupported("vector(768)")
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([createdAt])
+}
+enum Genre {
+  ACTION
+  ADVENTURE
+  ANIMATION
+  COMEDY
+  CRIME
+  DOCUMENTARY
+  DRAMA
+  FAMILY
+  FANTASY
+  HISTORY
+  HORROR
+  MUSIC
+  MYSTERY
+  ROMANCE
+  SCI_FI
+  THRILLER
+  WAR
+  WESTERN
+}

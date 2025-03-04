@@ -8,7 +8,6 @@ import { Movie as Film } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { useAuth } from "@/app/context/auth-provider";
 
 interface HeroBannerProps {
   film: Film;
@@ -19,7 +18,6 @@ export default function HeroBanner({
   film,
   isFavorite = false,
 }: HeroBannerProps) {
-  const { user } = useAuth();
   const router = useRouter();
   const [favorite, setFavorite] = useState(isFavorite);
   const [muted, setMuted] = useState(true);

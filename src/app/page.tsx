@@ -12,10 +12,11 @@ export default async function Home() {
   ]);
 
   const trendingFilms = allFilms.slice(0, 10);
+
   return (
     <section>
       <Suspense fallback={<div className="h-[70vh] bg-black"></div>}>
-        {featuredFilm && <HeroBanner film={featuredFilm} />}
+        {/* {featuredFilm && <HeroBanner film={featuredFilm} />} */}
       </Suspense>
 
       <div className="mt-4 md:mt-8">

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
-import { Bell, Menu, Search, X } from "lucide-react";
+import { Bell, Loader2, Menu, Search, X } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -15,10 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useAuth } from "@/app/context/auth-provider";
+import { signout } from "@/actions/auth";
+
+import useUser from "@/hooks/use-user";
 
 const NavBar = () => {
-  const { user, signOut } = useAuth();
+  const { isLoading, user } = useUser();
   const router = useRouter();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,13 +45,12 @@ const NavBar = () => {
     if (searchQuery.trim()) {
       router.push(`/film?q=${encodeURIComponent(searchQuery)}`);
     }
-    console.log("hi?");
   };
 
   const navItems = [
     { name: "Home", path: "/" },
     { name: "TV Shows", path: "/tv-shows" },
-    { name: "Movies", path: "/movies" },
+    { name: "Films", path: "/film" },
     { name: "My List", path: "/my-list" },
   ];
   return (
@@ -109,60 +110,69 @@ const NavBar = () => {
             <Button variant="ghost" size="icon" className="text-white">
               <Bell className="h-5 w-5" />
             </Button>
-
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+            {isLoading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <>
+                {user ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="relative h-8 w-8 rounded-sm"
+                      >
+                        <Avatar className="h-8 w-8 rounded-sm">
+                          <AvatarImage
+                            src="/placeholder-user.jpg"
+                            alt={user.email || ""}
+                          />
+                          <AvatarFallback className="rounded-sm bg-red-600">
+                            {user.email?.charAt(0).toUpperCase() || "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      className="w-56"
+                      align="end"
+                      forceMount
+                    >
+                      <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {user.email}
+                          </p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile">Profile</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/my-list">My List</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/account">Account</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => signout()}
+                      >
+                        Sign out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
                   <Button
                     variant="ghost"
-                    className="relative h-8 w-8 rounded-sm"
+                    className="text-white hover:text-white hover:bg-red-600"
+                    onClick={() => router.push("/auth/signin")}
                   >
-                    <Avatar className="h-8 w-8 rounded-sm">
-                      <AvatarImage
-                        src="/placeholder-user.jpg"
-                        alt={user.email || ""}
-                      />
-                      <AvatarFallback className="rounded-sm bg-red-600">
-                        {user.email?.charAt(0).toUpperCase() || "U"}
-                      </AvatarFallback>
-                    </Avatar>
+                    Sign In
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/my-list">My List</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/account">Account</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => signOut()}
-                  >
-                    Sign out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button
-                variant="ghost"
-                className="text-white hover:text-white hover:bg-red-600"
-                onClick={() => router.push("/auth/signin")}
-              >
-                Sign In
-              </Button>
+                )}
+              </>
             )}
           </div>
 
@@ -261,7 +271,7 @@ const NavBar = () => {
                   <button
                     className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                     onClick={() => {
-                      signOut();
+                      signout();
                       setIsMobileMenuOpen(false);
                     }}
                   >

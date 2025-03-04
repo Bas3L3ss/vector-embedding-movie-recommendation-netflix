@@ -5,7 +5,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/provider/theme-provider";
-import { AuthProvider } from "./context/auth-provider";
+import { Separator } from "@/components/ui/separator";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,19 +33,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* TODO: add theme provider */}
-        {/* <ThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
-        > */}
-        <AuthProvider>
+        >
+          <Navbar />
           <main className="min-h-screen bg-black">
-            <Navbar />
             {children} <Toaster />
-            <Footer />
           </main>
-        </AuthProvider>
-        {/* </ThemeProvider> */}
+          <Separator className="bg-red-500" />
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

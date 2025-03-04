@@ -4,24 +4,7 @@ import { Facebook, Instagram, Twitter, Youtube, Github } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-black text-gray-300 pt-20 pb-8 mt-20">
-      {/* Wave effect */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden">
-        <div className="relative h-20">
-          <div
-            className="absolute bottom-0 left-0 w-[200%] h-20"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80')",
-              backgroundSize: "50% 100%",
-              animation: "wave 15s linear infinite",
-              opacity: 0.1,
-              filter: "blur(5px)",
-            }}
-          />
-        </div>
-      </div>
-
+    <footer className="relative w-full bg-black text-gray-300 pt-20 pb-8  ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
           {/* Social Icons */}
@@ -229,17 +212,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes wave {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
     </footer>
   );
 }

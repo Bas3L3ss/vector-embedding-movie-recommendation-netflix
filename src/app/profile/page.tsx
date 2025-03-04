@@ -11,7 +11,7 @@ import {
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -27,11 +27,14 @@ import {
 } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase/client";
 import { passwordFormSchema, profileFormSchema } from "./_schema";
-import { useAuth } from "../context/auth-provider";
+import { User } from "@supabase/supabase-js";
+import { signout } from "@/actions/auth";
+import { Loader2 } from "lucide-react";
+import useUser from "@/hooks/use-user";
 
 export default function ProfilePage() {
-  const { user, signOut } = useAuth();
-  const router = useRouter();
+  const { user } = useUser();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const profileForm = useForm<z.infer<typeof profileFormSchema>>({
@@ -56,7 +59,8 @@ export default function ProfilePage() {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase
+      const supabaseClient = supabase();
+      const { error } = await supabaseClient
         .from("users")
         .update({ name: values.name })
         .eq("id", user.id);
@@ -81,7 +85,9 @@ export default function ProfilePage() {
   ) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.updateUser({
+      const supabaseClient = supabase();
+
+      const { error } = await supabaseClient.auth.updateUser({
         password: values.newPassword,
       });
 
@@ -103,15 +109,15 @@ export default function ProfilePage() {
 
   const handleSignOut = async () => {
     try {
-      await signOut();
-      router.push("/");
+      await signout();
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
 
   if (!user) {
-    return null;
+    // TODO: beautify using netflix loader in film page
+    return <Loader2 size={16} className="animate-spin" />;
   }
 
   return (
@@ -160,6 +166,7 @@ export default function ProfilePage() {
                   >
                     <FormField
                       control={profileForm.control}
+                      disabled={isLoading}
                       name="name"
                       render={({ field }) => (
                         <FormItem>
@@ -178,6 +185,7 @@ export default function ProfilePage() {
 
                     <FormField
                       control={profileForm.control}
+                      disabled={isLoading}
                       name="email"
                       render={({ field }) => (
                         <FormItem>
@@ -244,6 +252,7 @@ export default function ProfilePage() {
 
                     <FormField
                       control={passwordForm.control}
+                      disabled={isLoading}
                       name="newPassword"
                       render={({ field }) => (
                         <FormItem>
@@ -265,6 +274,7 @@ export default function ProfilePage() {
 
                     <FormField
                       control={passwordForm.control}
+                      disabled={isLoading}
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>

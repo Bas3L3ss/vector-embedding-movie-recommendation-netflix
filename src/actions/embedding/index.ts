@@ -3,32 +3,14 @@ import { hf } from "@/lib/huggingface";
 // import { redis } from "@/lib/redis";
 
 export async function generateEmbedding(text: string) {
-  if (!process.env.HUGGINGFACE_API_KEY) {
-    throw new Error("Missing Hugging Face API Key");
-  }
+  const response = await hf.featureExtraction({
+    model: "sentence-transformers/all-MiniLM-L6-v2",
+    inputs: text,
+    parameters: {},
+    headers: { Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}` },
+  });
 
-  try {
-    const response = await fetch(
-      "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: text }), // Send a string, not an array
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Hugging Face API Error: ${response.statusText}`);
-    }
-
-    return await response.json(); // Return the embeddings
-  } catch (error) {
-    console.error("Hugging Face API Error:", error);
-    throw error;
-  }
+  return response as number[]; // Returns embedding vector
 }
 
 export async function generateCachedEmbedding(

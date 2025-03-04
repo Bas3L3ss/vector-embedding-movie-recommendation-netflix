@@ -63,7 +63,6 @@ export async function getFilmById(id: string) {
 export async function searchFilmsByText(query: string) {
   try {
     const vector = await generateCachedEmbedding(query);
-    console.log(vector, "vector");
     if (vector.length > 0) {
       return await findSimilarMovies(vector, 0.5, 10);
     }

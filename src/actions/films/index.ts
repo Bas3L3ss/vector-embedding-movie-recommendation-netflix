@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { Genre } from "@prisma/client";
+import { generateCachedEmbedding } from "../embedding";
 
 export async function getFilms() {
   const films = await prisma.movie.findMany({
@@ -57,4 +58,18 @@ export async function getFilmById(id: string) {
   return await prisma.movie.findUnique({
     where: { id: BigInt(id) },
   });
+}
+
+export async function searchFilmsByText(query: string) {
+  try {
+    const vector = await generateCachedEmbedding(query);
+    console.log(vector, "vector");
+    if (vector.length > 0) {
+      return await findSimilarMovies(vector, 0.5, 10);
+    }
+    return [];
+  } catch (error) {
+    console.error("Search error:", error);
+    return [];
+  }
 }

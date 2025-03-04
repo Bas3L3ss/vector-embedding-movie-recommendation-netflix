@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/context/auth-provider";
 import { toast } from "sonner";
+import { useAuth } from "@/app/context/auth-provider";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -29,8 +29,8 @@ const formSchema = z.object({
 
 export default function SignIn() {
   const router = useRouter();
-  const { signIn, signInWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const { signInWithGoogle, signIn } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,9 +61,11 @@ export default function SignIn() {
   async function handleGoogleSignIn() {
     try {
       await signInWithGoogle();
+
       router.push("/");
     } catch (error) {
       console.error("Google sign in error:", error);
+
       toast.error("Google sign in failed", {
         description:
           "There was an error signing in with Google. Please try again.",

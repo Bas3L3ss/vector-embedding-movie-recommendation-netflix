@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, Bell, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React, { useEffect, useState } from "react";
+import { Input } from "./ui/input";
+import { Bell, Menu, Search, X } from "lucide-react";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,12 +13,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/context/auth-provider";
+} from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useAuth } from "@/app/context/auth-provider";
 
-export default function Navbar() {
+const NavBar = () => {
   const { user, signOut } = useAuth();
-
   const router = useRouter();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,8 +41,9 @@ export default function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      router.push(`/film?q=${encodeURIComponent(searchQuery)}`);
     }
+    console.log("hi?");
   };
 
   const navItems = [
@@ -52,7 +52,6 @@ export default function Navbar() {
     { name: "Movies", path: "/movies" },
     { name: "My List", path: "/my-list" },
   ];
-
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${
@@ -288,4 +287,6 @@ export default function Navbar() {
       )}
     </nav>
   );
-}
+};
+
+export default NavBar;

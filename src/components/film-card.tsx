@@ -6,17 +6,21 @@ import Link from "next/link";
 import { Play, Plus, Check, Info } from "lucide-react";
 import { Movie as Film } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/context/auth-provider";
+import { supabase } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { User } from "@supabase/supabase-js";
 
 interface FilmCardProps {
   film: Film;
   isFavorite?: boolean;
+  user: User | null;
 }
 
-export default function FilmCard({ film, isFavorite = false }: FilmCardProps) {
-  const { user } = useAuth();
+export default function FilmCard({
+  film,
+  isFavorite = false,
+  user,
+}: FilmCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [favorite, setFavorite] = useState(isFavorite);
 

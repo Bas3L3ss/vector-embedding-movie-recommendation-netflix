@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/context/auth-provider";
 import { toast } from "sonner";
+import { useAuth } from "@/app/context/auth-provider";
 
 const formSchema = z
   .object({
@@ -34,8 +34,8 @@ const formSchema = z
   });
 
 export default function SignUp() {
-  const router = useRouter();
   const { signUp, signInWithGoogle } = useAuth();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,7 +69,7 @@ export default function SignUp() {
 
   async function handleGoogleSignUp() {
     try {
-      await signInWithGoogle();
+      signInWithGoogle();
       router.push("/");
     } catch (error) {
       console.error("Google sign up error:", error);

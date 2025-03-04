@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Play, Plus, Check, Clock, ThumbsUp, Share2 } from "lucide-react";
+import { Play, Plus, ThumbsUp, Share2 } from "lucide-react";
 
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";

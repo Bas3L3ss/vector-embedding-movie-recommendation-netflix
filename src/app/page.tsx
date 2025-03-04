@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { getFeaturedFilm, getFilms, getFilmsByGenre } from "@/actions/films";
-import FilmCarousel from "@/components/film-carousel";
-import HeroBanner from "@/components/hero-banner";
-import { createClient } from "@/lib/supabase/server";
+import { getFeaturedFilm, getFilms, getFilmsByGenre } from "../actions/films";
+import FilmCarousel from "../components/film-carousel";
+import HeroBanner from "../components/hero-banner";
+import { createClient } from "../lib/supabase/server";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -17,13 +17,12 @@ export default async function Home() {
   const trendingFilms = allFilms.slice(0, 10);
 
   return (
-    <section>
+    <section className="pt-24">
       <Suspense fallback={<div className="h-[70vh] bg-black"></div>}>
         {featuredFilm && (
           <HeroBanner user={user.data.user} isFavorite film={featuredFilm} />
         )}
       </Suspense>
-
       <div className="mt-4 md:mt-8">
         {trendingFilms.length > 0 && (
           <Suspense fallback={<div className="h-60 bg-black"></div>}>

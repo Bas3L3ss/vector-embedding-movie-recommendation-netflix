@@ -1,6 +1,6 @@
 "use client";
-import { signInWithGoogle } from "@/actions/auth";
-import { Button } from "@/components/ui/button";
+import { signInWithGoogle } from "../../actions/auth";
+import { Button } from "../ui/button";
 import React from "react";
 
 const SignInWithGoogleButton = () => {

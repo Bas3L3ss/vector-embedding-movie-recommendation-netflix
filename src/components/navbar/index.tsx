@@ -48,12 +48,17 @@ const NavBar = () => {
     }
   };
 
-  const navItems = [
-    { name: "Home", path: "/" },
-    { name: "TV Shows", path: "/tv-shows" },
-    { name: "Films", path: "/film" },
-    { name: "My List", path: "/my-list" },
-  ];
+  const navItems = user
+    ? [
+        { name: "Home", path: "/" },
+        { name: "TV Shows", path: "/tv-shows" },
+        { name: "Films", path: "/film" },
+        { name: "My List", path: "/my-list" },
+      ]
+    : [
+        { name: "Home", path: "/" },
+        { name: "Login", path: "/auth/signin" },
+      ];
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${

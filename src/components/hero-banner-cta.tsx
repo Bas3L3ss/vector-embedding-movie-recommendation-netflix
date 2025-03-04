@@ -6,7 +6,7 @@ import { Movie } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from "../lib/supabase/client";
 
 const HeroBannerCta = ({
   film,

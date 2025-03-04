@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsContent, TabsTrigger } from "../ui/tabs";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import ProfileForm from "./profile-form";

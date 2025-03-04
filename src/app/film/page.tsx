@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import FilmCard from "@/components/film-card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import FilmCard from "../../components/film-card";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 import { Search, X } from "lucide-react";
 import { Movie } from "@prisma/client";
-import { searchFilmsByText } from "@/actions/films";
-import useUser from "@/hooks/use-user";
+import { searchFilmsByText } from "../../actions/films";
+import useUser from "../../hooks/use-user";
 
 export default function SearchPage() {
   const { user } = useUser();

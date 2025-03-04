@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import FilmCard from "@/components/film-card";
-import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
+import FilmCard from "../../components/film-card";
+import { prisma } from "../../lib/db";
+import { createClient } from "../../lib/supabase/server";
 import { Movie } from "@prisma/client";
 
 // async function getFavorites(userId: string) {

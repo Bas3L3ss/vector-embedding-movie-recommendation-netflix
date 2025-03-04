@@ -1,5 +1,5 @@
 "use server";
-import { hf } from "@/lib/huggingface";
+import { hf } from "../../lib/huggingface";
 // import { redis } from "@/lib/redis";
 
 export async function generateEmbedding(text: string) {

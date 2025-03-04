@@ -1,6 +1,6 @@
-import ProfileContainer from "@/components/profile/profile-container";
-import ProfileHeader from "@/components/profile/profile-header";
-import { createClient } from "@/lib/supabase/server";
+import ProfileContainer from "../../components/profile/profile-container";
+import ProfileHeader from "../../components/profile/profile-header";
+import { createClient } from "../../lib/supabase/server";
 export default async function ProfilePage() {
   const supabase = await createClient();
 

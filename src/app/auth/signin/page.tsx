@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
 import {
   Form,
   FormControl,
@@ -15,11 +15,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
+} from "../../../components/ui/form";
+import { Separator } from "../../../components/ui/separator";
 import { toast } from "sonner";
-import SignInWithGoogleButton from "@/components/auth/sign-in-with-google-button";
-import { login } from "@/actions/auth";
+import SignInWithGoogleButton from "../../../components/auth/sign-in-with-google-button";
+import { login } from "../../../actions/auth";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),

@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play, Plus, Check, Info } from "lucide-react";
 import { Movie as Film } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase/client";
+import { Button } from "./ui/button";
+import { supabase } from "../lib/supabase/client";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
 

@@ -19,6 +19,8 @@ export default function HeroBanner({
   film,
   isFavorite = false,
 }: HeroBannerProps) {
+  console.log(film);
+
   const router = useRouter();
   const { user } = useAuth();
   const [favorite, setFavorite] = useState(isFavorite);
@@ -84,7 +86,7 @@ export default function HeroBanner({
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src={film.posterUrl[0]}
+          src={film.posterUrl[currentSlide]}
           alt={film.title}
           fill
           priority
@@ -103,7 +105,6 @@ export default function HeroBanner({
         </h1>
 
         <div className="flex items-center text-sm text-gray-300 mb-4 space-x-4">
-          <span className="text-green-500 font-semibold">97% Match</span>
           <span>{film.releaseYear}</span>
           <span className="border px-1 text-xs border-gray-500">
             {String(film.rating)}
@@ -165,11 +166,11 @@ export default function HeroBanner({
       </div>
 
       {/* Dots navigation */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      <div className="   items-center justify-center flex space-x-2">
         {[0, 1, 2, 3, 4].map((index) => (
           <button
             key={index}
-            className={`h-2 rounded-full transition-all ${
+            className={`h-2 rounded-full transition-all cursor-pointer ${
               currentSlide === index ? "w-6 bg-red-600" : "w-2 bg-gray-500"
             }`}
             onClick={() => {

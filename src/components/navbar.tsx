@@ -15,16 +15,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { useAuth } from "@/context/auth-provider";
+import { useAuth } from "@/context/auth-provider";
 
 export default function Navbar() {
-  //   const { user, signOut } = useAuth();
-  const signOut = () => {
-    console.log("ye");
-  };
-  const user = {
-    email: "baseless060907@gmail.com",
-  };
+  const { user, signOut } = useAuth();
 
   const router = useRouter();
   const pathname = usePathname();

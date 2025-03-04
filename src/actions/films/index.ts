@@ -52,3 +52,9 @@ export async function findSimilarMovies(
 
   return result;
 }
+
+export async function getFilmById(id: string) {
+  return await prisma.movie.findUnique({
+    where: { id: BigInt(id) },
+  });
+}

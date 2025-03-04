@@ -32,19 +32,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
+        {/* TODO: add theme provider */}
+        {/* <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
-        >
-          <AuthProvider>
-            <main className="min-h-screen bg-black">
-              <Navbar />
-              {children} <Toaster />
-              <Footer />
-            </main>
-          </AuthProvider>
-        </ThemeProvider>
+        > */}
+        <AuthProvider>
+          <main className="min-h-screen bg-black">
+            <Navbar />
+            {children} <Toaster />
+            <Footer />
+          </main>
+        </AuthProvider>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

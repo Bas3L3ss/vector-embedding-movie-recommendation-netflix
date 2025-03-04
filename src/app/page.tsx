@@ -25,11 +25,11 @@ export default async function Home() {
         </Suspense>
 
         <Suspense fallback={<div className="h-60 bg-black"></div>}>
-          <FilmCarousel title="Movies" films={movies} />
+          <FilmCarousel title="Drama" films={movies} />
         </Suspense>
 
         <Suspense fallback={<div className="h-60 bg-black"></div>}>
-          <FilmCarousel title="TV Shows" films={tvShows} />
+          <FilmCarousel title="Action" films={tvShows} />
         </Suspense>
 
         <Suspense fallback={<div className="h-60 bg-black"></div>}>

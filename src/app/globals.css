@@ -147,3 +147,35 @@
     @apply bg-background text-foreground;
   }
 }
+@keyframes bubble {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 1;
+  }
+}
+
+.bubble-dots span {
+  opacity: 0;
+  animation: bubble 1.5s infinite;
+}
+
+.bubble-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.bubble-dots span:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.bubble-dots span:nth-child(3) {
+  animation-delay: 1s;
+}

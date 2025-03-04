@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Bell, Loader2, Menu, Search, X } from "lucide-react";
-import { Button } from "./ui/button";
+import { Input } from "../ui/input";
+import { Bell, Menu, Search, X } from "lucide-react";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,11 +13,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { signout } from "@/actions/auth";
 
 import useUser from "@/hooks/use-user";
+import Loading from "../reusable/loading";
 
 const NavBar = () => {
   const { isLoading, user } = useUser();
@@ -111,7 +112,7 @@ const NavBar = () => {
               <Bell className="h-5 w-5" />
             </Button>
             {isLoading ? (
-              <Loader2 className="animate-spin" size={16} />
+              <Loading size={7} />
             ) : (
               <>
                 {user ? (

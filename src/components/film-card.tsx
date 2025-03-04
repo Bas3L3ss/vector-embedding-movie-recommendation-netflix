@@ -38,7 +38,7 @@ export default function FilmCard({
     try {
       if (favorite) {
         // Remove from favorites
-        const { error } = await supabase
+        const { error } = await supabase()
           .from("favorites")
           .delete()
           .eq("user_id", user.id)
@@ -51,7 +51,7 @@ export default function FilmCard({
         });
       } else {
         // Add to favorites
-        const { error } = await supabase.from("favorites").insert({
+        const { error } = await supabase().from("favorites").insert({
           user_id: user.id,
           film_id: film.id,
         });

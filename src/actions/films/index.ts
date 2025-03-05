@@ -52,9 +52,7 @@ export async function addFilms(films: Movie[]) {
       }))
     );
 
-    const { data, error } = await client
-      .from("Movie")
-      .insert(filmsWithEmbeddings);
+    const { error } = await client.from("Movie").insert(filmsWithEmbeddings);
     if (error) {
       console.log(error);
 

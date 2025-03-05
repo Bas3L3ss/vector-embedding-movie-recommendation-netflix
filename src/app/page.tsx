@@ -17,8 +17,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 
 const NetflixLandingPage = async () => {
-  const user = (await (await createClient()).auth.getSession()).data.session
-    ?.user.id;
+  const user = (await (await createClient()).auth.getUser()).data.user?.id;
   if (user) {
     redirect("/home");
   }

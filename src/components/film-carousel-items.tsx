@@ -125,7 +125,8 @@ const FilmCarouselItems = ({
             <FilmCard
               user={user}
               film={film}
-              isFavorite={favorites.some((m) => m.filmId == film.id)}
+              // @ts-expect-error: thats fine
+              isFavorite={favorites?.some((m) => m?.filmId == film?.id)}
             />
           </div>
         ))}

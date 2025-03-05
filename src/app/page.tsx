@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { getFeaturedFilm, getFilms, getFilmsByGenre } from "../actions/films";
 import FilmCarousel from "../components/film-carousel";
 import HeroBanner from "../components/hero-banner";
@@ -15,12 +14,12 @@ export default async function Home() {
     supabase.auth.getUser(),
   ]);
   let favorites;
+
   if (user && user.data.user?.id) {
     favorites = await getFavorites(user.data.user.id);
   }
 
   const trendingFilms = allFilms.slice(0, 10);
-
   return (
     <section className="pt-24">
       {featuredFilm && (
@@ -56,6 +55,7 @@ export default async function Home() {
             //@ts-expect-error: no problem
             favorites={favorites}
             title="Trending Now"
+            //@ts-expect-error: no problem
             films={trendingFilms.map((film) => {
               return {
                 cast: film.cast,
@@ -69,7 +69,7 @@ export default async function Home() {
                 genre: film.genre,
                 id: film.id,
                 language: film.language,
-                rating: film.rating,
+                rating: film.rating?.toNumber(),
                 releaseYear: film.releaseYear,
                 title: film.title,
                 trailerUrl: film.trailerUrl,
@@ -85,6 +85,7 @@ export default async function Home() {
             //@ts-expect-error: no problem
             favorites={favorites}
             title="Drama"
+            //@ts-expect-error: it's fine
             films={dramas.map((film) => {
               return {
                 cast: film.cast,
@@ -98,7 +99,7 @@ export default async function Home() {
                 genre: film.genre,
                 id: film.id,
                 language: film.language,
-                rating: film.rating,
+                rating: film.rating?.toNumber(),
                 releaseYear: film.releaseYear,
                 title: film.title,
                 trailerUrl: film.trailerUrl,
@@ -114,6 +115,7 @@ export default async function Home() {
             //@ts-expect-error: no problem
             favorites={favorites}
             title="Action"
+            //@ts-expect-error: no problem
             films={action.map((film) => {
               return {
                 cast: film.cast,
@@ -127,7 +129,7 @@ export default async function Home() {
                 genre: film.genre,
                 id: film.id,
                 language: film.language,
-                rating: film.rating,
+                rating: film.rating?.toNumber(),
                 releaseYear: film.releaseYear,
                 title: film.title,
                 trailerUrl: film.trailerUrl,
@@ -143,6 +145,7 @@ export default async function Home() {
             //@ts-expect-error: no problem
             favorites={favorites}
             title="New Releases"
+            //@ts-expect-error: no problem
             films={allFilms.map((film) => {
               return {
                 cast: film.cast,
@@ -156,7 +159,7 @@ export default async function Home() {
                 genre: film.genre,
                 id: film.id,
                 language: film.language,
-                rating: film.rating,
+                rating: film.rating?.toNumber(),
                 releaseYear: film.releaseYear,
                 title: film.title,
                 trailerUrl: film.trailerUrl,

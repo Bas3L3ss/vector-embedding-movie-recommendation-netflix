@@ -2,6 +2,7 @@ import { prisma } from "../../lib/db";
 import { Genre, Movie } from "@prisma/client";
 import { generateCachedEmbedding } from "../embedding";
 import { supabase } from "@/lib/supabase/client";
+
 export async function getFilms() {
   const films = await prisma.movie.findMany({
     orderBy: {
@@ -38,61 +39,6 @@ export async function getFeaturedFilm() {
   return film;
 }
 
-export async function findSimilarMovies(
-  queryVector: number[],
-  threshold: number,
-  limit: number
-) {
-  const result = await supabase().rpc("match_movie", {
-    query_embedding: queryVector,
-    similarity_threshold: threshold,
-    match_count: limit,
-  });
-
-  return result.data;
-}
-
-export async function searchFilmsByText(query: string) {
-  try {
-    const vector = await generateCachedEmbedding(query);
-    if (vector.length > 0) {
-      return await findSimilarMovies(vector, 0.3, 10);
-    }
-    return [];
-  } catch (error) {
-    console.error("Search error:", error);
-    return [];
-  }
-}
-
-export async function getFilmById(id: string) {
-  try {
-    // Fetch only the id and embedding columns from the Movie table
-
-    const { data, error } = await supabase()
-      .from("Movie")
-      .select("*")
-
-      .eq("id", id);
-    // Filter by the provided id
-
-    if (error) {
-      console.error("Error fetching film by ID:", error);
-
-      return [];
-
-      // Return an empty array in case of error
-    }
-
-    return data;
-    // Return the fetched data
-  } catch (error) {
-    console.error("Unexpected error:", error);
-
-    return [];
-    // Return an empty array in case of unexpected error
-  }
-}
 export async function addFilms(films: Movie[]) {
   try {
     const client = supabase();
@@ -112,10 +58,36 @@ export async function addFilms(films: Movie[]) {
     if (error) {
       console.log(error);
 
-      throw new Error(error);
+      throw new Error("Error creating movies");
     }
   } catch (error) {
     console.log(error);
     throw new Error("Error creating film");
+  }
+}
+
+export async function toggleFavorites(
+  userId: string,
+  filmId: bigint,
+  favorite: boolean
+) {
+  const serializedFilmId = filmId.toString();
+
+  if (favorite) {
+    const { error } = await supabase()
+      .from("Favorite")
+      .delete()
+      .eq("userId", userId)
+      .eq("filmId", serializedFilmId);
+
+    if (error) throw error;
+  } else {
+    // Add to Favorite
+    const { error } = await supabase().from("Favorite").insert({
+      userId: userId,
+      filmId: serializedFilmId,
+    });
+
+    if (error) throw error;
   }
 }

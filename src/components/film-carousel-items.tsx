@@ -8,8 +8,10 @@ import { User } from "@supabase/supabase-js";
 const FilmCarouselItems = ({
   films,
   user,
+  favorites,
 }: {
   films: Movie[];
+  favorites?: { filmId: string; Movie: Movie }[];
   user: User | null;
 }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -83,6 +85,7 @@ const FilmCarouselItems = ({
   const handleMouseLeave = () => {
     setIsDragging(false);
   };
+
   return (
     <>
       {showLeftArrow && (
@@ -119,7 +122,11 @@ const FilmCarouselItems = ({
         {films.map((film) => (
           <div key={film.id} className="group flex-none w-[250px] md:w-[280px]">
             {/* TODO: dynamic favourite */}
-            <FilmCard user={user} film={film} isFavorite={true} />
+            <FilmCard
+              user={user}
+              film={film}
+              isFavorite={favorites.some((m) => m.filmId == film.id)}
+            />
           </div>
         ))}
       </div>

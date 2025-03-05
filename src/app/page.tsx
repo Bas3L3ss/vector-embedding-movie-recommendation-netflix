@@ -3,6 +3,7 @@ import { getFeaturedFilm, getFilms, getFilmsByGenre } from "../actions/films";
 import FilmCarousel from "../components/film-carousel";
 import HeroBanner from "../components/hero-banner";
 import { createClient } from "../lib/supabase/server";
+import { getFavorites } from "@/actions/films/server-only";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -13,42 +14,47 @@ export default async function Home() {
     getFeaturedFilm(),
     supabase.auth.getUser(),
   ]);
+  let favorites;
+  if (user && user.data.user?.id) {
+    favorites = await getFavorites(user.data.user.id);
+  }
 
   const trendingFilms = allFilms.slice(0, 10);
 
   return (
     <section className="pt-24">
-      <Suspense fallback={<div className="h-[70vh] bg-black"></div>}>
-        {featuredFilm && (
-          <HeroBanner
-            user={user.data.user}
-            isFavorite
-            film={{
-              cast: featuredFilm.cast,
-              country: featuredFilm.country,
-              createdAt: featuredFilm.createdAt,
-              description: featuredFilm.description,
-              posterUrl: featuredFilm.posterUrl,
-              director: featuredFilm.director,
-              duration: featuredFilm.duration,
-              featured: featuredFilm.featured,
-              genre: featuredFilm.genre,
-              id: featuredFilm.id,
-              language: featuredFilm.language,
-              rating: featuredFilm.rating?.toNumber(),
-              releaseYear: featuredFilm.releaseYear,
-              title: featuredFilm.title,
-              trailerUrl: featuredFilm.trailerUrl,
-              updatedAt: featuredFilm.updatedAt,
-              videoUrl: featuredFilm.videoUrl,
-            }}
-          />
-        )}
-      </Suspense>
+      {featuredFilm && (
+        <HeroBanner
+          user={user.data.user}
+          isFavorite={favorites?.some((f) => f.filmId == featuredFilm.id)}
+          film={{
+            cast: featuredFilm.cast,
+            country: featuredFilm.country,
+            createdAt: featuredFilm.createdAt,
+            description: featuredFilm.description,
+            posterUrl: featuredFilm.posterUrl,
+            director: featuredFilm.director,
+            duration: featuredFilm.duration,
+            featured: featuredFilm.featured,
+            genre: featuredFilm.genre,
+            id: featuredFilm.id,
+            language: featuredFilm.language,
+            //@ts-expect-error: no problem
+            rating: featuredFilm.rating?.toNumber(),
+            releaseYear: featuredFilm.releaseYear,
+            title: featuredFilm.title,
+            trailerUrl: featuredFilm.trailerUrl,
+            updatedAt: featuredFilm.updatedAt,
+            videoUrl: featuredFilm.videoUrl,
+          }}
+        />
+      )}
       <div className="mt-4 md:mt-8">
         {trendingFilms.length > 0 && (
           <FilmCarousel
             user={user.data.user}
+            //@ts-expect-error: no problem
+            favorites={favorites}
             title="Trending Now"
             films={trendingFilms.map((film) => {
               return {
@@ -76,6 +82,8 @@ export default async function Home() {
         {dramas.length > 0 && (
           <FilmCarousel
             user={user.data.user}
+            //@ts-expect-error: no problem
+            favorites={favorites}
             title="Drama"
             films={dramas.map((film) => {
               return {
@@ -103,6 +111,8 @@ export default async function Home() {
         {action.length > 0 && (
           <FilmCarousel
             user={user.data.user}
+            //@ts-expect-error: no problem
+            favorites={favorites}
             title="Action"
             films={action.map((film) => {
               return {
@@ -130,6 +140,8 @@ export default async function Home() {
         {allFilms.length > 0 && (
           <FilmCarousel
             user={user.data.user}
+            //@ts-expect-error: no problem
+            favorites={favorites}
             title="New Releases"
             films={allFilms.map((film) => {
               return {

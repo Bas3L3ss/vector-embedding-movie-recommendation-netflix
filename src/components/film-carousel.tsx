@@ -1,4 +1,4 @@
-import { Movie as Film } from "@prisma/client";
+import { Movie as Film, Movie } from "@prisma/client";
 
 import { User } from "@supabase/supabase-js";
 import FilmCarouselItems from "./film-carousel-items";
@@ -6,7 +6,7 @@ import FilmCarouselItems from "./film-carousel-items";
 interface FilmCarouselProps {
   title: string;
   films: Film[];
-  favorites?: string[];
+  favorites?: { filmId: string; Movie: Movie }[];
   user: User | null;
 }
 
@@ -22,7 +22,7 @@ export default function FilmCarousel({
         {title}
       </h2>
 
-      <FilmCarouselItems films={films} user={user} />
+      <FilmCarouselItems favorites={favorites} films={films} user={user} />
     </div>
   );
 }

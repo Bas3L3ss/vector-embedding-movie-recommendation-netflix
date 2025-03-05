@@ -13,7 +13,7 @@ const Loading = ({
   return (
     <div
       className={cn(
-        "flex flex-col justify-center py-16 items-center ",
+        "flex flex-col justify-center py-16 items-center  text-white",
         className
       )}
     >

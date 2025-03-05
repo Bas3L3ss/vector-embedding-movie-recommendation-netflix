@@ -27,7 +27,7 @@ export default function HeroBanner({
     }, 8000);
 
     return () => clearInterval(interval);
-  }, [autoplay]);
+  }, [autoplay, film.posterUrl.length]);
 
   return (
     <div className="relative w-full h-[70vh] md:h-[80vh] lg:h-[90vh]">
@@ -67,11 +67,11 @@ export default function HeroBanner({
 
       {/* Dots navigation */}
       <div className="   items-center justify-center flex space-x-2">
-        {[0, 1, 2, 3, 4].map((index) => (
+        {film.posterUrl.map((_, index) => (
           <button
             key={index}
-            className={`h-2 rounded-full transition-all cursor-pointer ${
-              currentSlide === index ? "w-6 bg-red-600" : "w-2 bg-gray-500"
+            className={`h-4 rounded-full transition-all cursor-pointer ${
+              currentSlide === index ? "w-8 bg-red-600" : "w-4 bg-gray-500"
             }`}
             onClick={() => {
               setCurrentSlide(index);

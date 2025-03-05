@@ -6,9 +6,8 @@ import Link from "next/link";
 import { Play, Plus, Check, Info } from "lucide-react";
 import { Movie as Film } from "@prisma/client";
 import { Button } from "./ui/button";
-import { supabase } from "../lib/supabase/client";
-import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
+import useToggleFavorite from "@/hooks/use-toggle-favorite";
 
 interface FilmCardProps {
   film: Film;
@@ -22,53 +21,11 @@ export default function FilmCard({
   user,
 }: FilmCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [favorite, setFavorite] = useState(isFavorite);
-
-  const toggleFavorite = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!user) {
-      toast.error("Authentication required", {
-        description: "Please sign in to add films to your list",
-      });
-      return;
-    }
-
-    try {
-      if (favorite) {
-        // Remove from favorites
-        const { error } = await supabase()
-          .from("favorites")
-          .delete()
-          .eq("user_id", user.id)
-          .eq("film_id", film.id);
-
-        if (error) throw error;
-        setFavorite(false);
-        toast("Removed from My List", {
-          description: `${film.title} has been removed from your list`,
-        });
-      } else {
-        // Add to favorites
-        const { error } = await supabase().from("favorites").insert({
-          user_id: user.id,
-          film_id: film.id,
-        });
-
-        if (error) throw error;
-        setFavorite(true);
-        toast("Added to My List", {
-          description: `${film.title} has been added to your list`,
-        });
-      }
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-      toast.error("Error", {
-        description: "There was an error updating your list",
-      });
-    }
-  };
+  const { favorite, handleToggleFavorite } = useToggleFavorite(
+    user,
+    film,
+    isFavorite
+  );
 
   return (
     <Link href={`/film/${film.id}`}>
@@ -105,7 +62,11 @@ export default function FilmCard({
                   size="icon"
                   variant="outline"
                   className="h-8 w-8 rounded-full border-white/40 bg-black/30 hover:bg-black/50"
-                  onClick={toggleFavorite}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleToggleFavorite();
+                  }}
                 >
                   {favorite ? (
                     <Check className="h-4 w-4" />

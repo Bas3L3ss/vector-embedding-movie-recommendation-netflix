@@ -238,7 +238,9 @@ const NavBar = () => {
                   <div className="flex-shrink-0">
                     <Avatar className="h-10 w-10 rounded-sm">
                       <AvatarImage
-                        src="/placeholder-user.jpg"
+                        src={
+                          user.user_metadata.picture ?? "/placeholder-user.jpg"
+                        }
                         alt={user.email || ""}
                       />
                       <AvatarFallback className="rounded-sm bg-red-600">

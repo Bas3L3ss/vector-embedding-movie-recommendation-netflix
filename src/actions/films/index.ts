@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/db";
-import { Genre } from "@prisma/client";
+import { Genre, Movie } from "@prisma/client";
 import { generateCachedEmbedding } from "../embedding";
-
+import { supabase } from "@/lib/supabase/client";
 export async function getFilms() {
   const films = await prisma.movie.findMany({
     orderBy: {
@@ -43,15 +43,30 @@ export async function findSimilarMovies(
   threshold: number,
   limit: number
 ) {
-  const result = await prisma.$queryRaw`
-    select id, title, description, 1 - (embedding <=> ${queryVector}::vector) as similarity
-    from "Movie"
-    where 1 - (embedding <=> ${queryVector}::vector) > ${threshold}
-    order by similarity desc
-    limit ${limit};
-  `;
+  console.log(queryVector);
+
+  const result = await supabase().rpc("match_movie", {
+    query_embedding: queryVector,
+    similarity_threshold: threshold,
+    match_count: limit,
+  });
+
+  console.log(result);
 
   return result;
+}
+
+export async function searchFilmsByText(query: string) {
+  try {
+    const vector = await generateCachedEmbedding(query);
+    if (vector.length > 0) {
+      return await findSimilarMovies(vector, 0, 10);
+    }
+    return [];
+  } catch (error) {
+    console.error("Search error:", error);
+    return [];
+  }
 }
 
 export async function getFilmById(id: string) {
@@ -59,16 +74,29 @@ export async function getFilmById(id: string) {
     where: { id: BigInt(id) },
   });
 }
-
-export async function searchFilmsByText(query: string) {
+export async function addFilms(films: Movie[]) {
   try {
-    const vector = await generateCachedEmbedding(query);
-    if (vector.length > 0) {
-      return await findSimilarMovies(vector, 0.5, 10);
+    const client = supabase();
+
+    const filmsWithEmbeddings = await Promise.all(
+      films.map(async (film) => ({
+        ...film,
+        embedding: await generateCachedEmbedding(
+          `${film.description},${film.title}`
+        ),
+      }))
+    );
+
+    const { data, error } = await client
+      .from("Movie")
+      .insert(filmsWithEmbeddings);
+    if (error) {
+      console.log(error);
+
+      throw new Error(error);
     }
-    return [];
   } catch (error) {
-    console.error("Search error:", error);
-    return [];
+    console.log(error);
+    throw new Error("Error creating film");
   }
 }

@@ -4,7 +4,7 @@ import { hf } from "../../lib/huggingface";
 
 export async function generateEmbedding(text: string) {
   const response = await hf.featureExtraction({
-    model: "sentence-transformers/all-MiniLM-L6-v2",
+    model: "sentence-transformers/all-mpnet-base-v2",
     inputs: text,
     parameters: {},
     headers: { Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}` },

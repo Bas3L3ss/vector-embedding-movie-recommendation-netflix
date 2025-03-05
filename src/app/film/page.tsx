@@ -21,6 +21,7 @@ export default function SearchPage() {
   useEffect(() => {
     if (initialQuery) {
       performSearch(initialQuery);
+      console.log();
     }
   }, [initialQuery]);
 

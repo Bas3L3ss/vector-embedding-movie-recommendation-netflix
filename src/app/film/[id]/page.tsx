@@ -20,7 +20,7 @@ export default async function FilmPage({ params }: { params: { id: string } }) {
 
   const similarFilms: Movie[] = await findSimilarMovies(
     film.embedding,
-    0.5,
+    0.3,
     10
   );
 

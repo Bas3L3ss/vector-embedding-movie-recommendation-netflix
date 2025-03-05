@@ -14,9 +14,9 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-import FilmCarousel from "../../../components/film-carousel";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
+import FilmCarousel from "@/components/film-carousel";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";

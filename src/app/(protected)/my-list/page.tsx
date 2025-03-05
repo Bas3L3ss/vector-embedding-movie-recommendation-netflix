@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "../../lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { getFavorites } from "@/actions/films/server-only";
 import FilmCard from "@/components/film-card";
 

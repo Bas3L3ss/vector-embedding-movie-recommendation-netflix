@@ -6,6 +6,7 @@ import Footer from "../components/footer";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "../provider/theme-provider";
 import { Separator } from "../components/ui/separator";
+import NProgressLayout from "@/provider/nprogress-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +33,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <main className="min-h-screen   bg-black">
-          <Navbar />
-          <Toaster />
-          {children}
-        </main>
-        <Separator className="bg-red-500" />
-        <Footer />
+        <NProgressLayout>
+          <main className="min-h-screen   bg-black">
+            <Navbar />
+            <Toaster />
+            {children}
+          </main>
+          <Separator className="bg-red-500" />
+          <Footer />
+        </NProgressLayout>
       </body>
     </html>
   );

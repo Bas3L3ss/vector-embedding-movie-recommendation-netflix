@@ -379,7 +379,7 @@ const movies: {
   },
 ];
 
-export const data: Movie[] = Array.from({ length: 2 }, (_, i) => ({
+export const data: Movie[] = Array.from({ length: movies.length }, (_, i) => ({
   title: movies[i].title,
   releaseYear: 2024,
   director: "John Doe",

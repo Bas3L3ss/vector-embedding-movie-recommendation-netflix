@@ -23,6 +23,7 @@ export default function FilmCard({
 }: FilmCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [favorite, setFavorite] = useState(isFavorite);
+  console.log(film);
 
   const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,7 +80,7 @@ export default function FilmCard({
       >
         <div className="aspect-[16/9] relative">
           <Image
-            src={film.posterUrl[0]}
+            src={film.posterurl[0]}
             alt={film.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-110"

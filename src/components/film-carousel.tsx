@@ -17,7 +17,7 @@ export default function FilmCarousel({
   films,
 }: FilmCarouselProps) {
   return (
-    <div className="relative group py-4">
+    <div className="relative   py-4">
       <h2 className="text-xl font-bold mb-4 text-white pl-4 md:pl-8">
         {title}
       </h2>

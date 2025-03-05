@@ -43,24 +43,20 @@ export async function findSimilarMovies(
   threshold: number,
   limit: number
 ) {
-  console.log(queryVector);
-
   const result = await supabase().rpc("match_movie", {
     query_embedding: queryVector,
     similarity_threshold: threshold,
     match_count: limit,
   });
 
-  console.log(result);
-
-  return result;
+  return result.data;
 }
 
 export async function searchFilmsByText(query: string) {
   try {
     const vector = await generateCachedEmbedding(query);
     if (vector.length > 0) {
-      return await findSimilarMovies(vector, 0, 10);
+      return await findSimilarMovies(vector, 0.3, 10);
     }
     return [];
   } catch (error) {
@@ -70,9 +66,32 @@ export async function searchFilmsByText(query: string) {
 }
 
 export async function getFilmById(id: string) {
-  return await prisma.movie.findUnique({
-    where: { id: BigInt(id) },
-  });
+  try {
+    // Fetch only the id and embedding columns from the Movie table
+
+    const { data, error } = await supabase()
+      .from("Movie")
+      .select("*")
+
+      .eq("id", id);
+    // Filter by the provided id
+
+    if (error) {
+      console.error("Error fetching film by ID:", error);
+
+      return [];
+
+      // Return an empty array in case of error
+    }
+
+    return data;
+    // Return the fetched data
+  } catch (error) {
+    console.error("Unexpected error:", error);
+
+    return [];
+    // Return an empty array in case of unexpected error
+  }
 }
 export async function addFilms(films: Movie[]) {
   try {

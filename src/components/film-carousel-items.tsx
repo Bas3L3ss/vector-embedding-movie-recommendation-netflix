@@ -117,7 +117,7 @@ const FilmCarouselItems = ({
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {films.map((film) => (
-          <div key={film.id} className="flex-none w-[250px] md:w-[280px]">
+          <div key={film.id} className="group flex-none w-[250px] md:w-[280px]">
             {/* TODO: dynamic favourite */}
             <FilmCard user={user} film={film} isFavorite={true} />
           </div>

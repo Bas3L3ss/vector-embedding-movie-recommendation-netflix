@@ -33,7 +33,7 @@ export default function HeroBanner({
     <div className="relative w-full h-[70vh] md:h-[80vh] lg:h-[90vh]">
       <div className="absolute inset-0">
         <Image
-          src={film.posterUrl[currentSlide]}
+          src={film.posterurl[currentSlide]}
           alt={film.title}
           fill
           priority

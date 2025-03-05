@@ -20,6 +20,7 @@ import { Separator } from "../../../components/ui/separator";
 import { toast } from "sonner";
 import SignInWithGoogleButton from "../../../components/auth/sign-in-with-google-button";
 import { signup } from "../../../actions/auth";
+import useUser from "@/hooks/use-user";
 
 const formSchema = z
   .object({
@@ -36,6 +37,7 @@ const formSchema = z
 
 export default function SignUp() {
   const router = useRouter();
+  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -65,6 +67,12 @@ export default function SignUp() {
     } finally {
       setIsLoading(false);
     }
+  }
+  if (user) {
+    toast("This page is only for unauthenticated", {
+      description: "redirecting...",
+    });
+    router.replace("/");
   }
 
   return (

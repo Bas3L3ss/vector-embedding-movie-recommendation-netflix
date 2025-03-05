@@ -20,6 +20,7 @@ import { Separator } from "../../../components/ui/separator";
 import { toast } from "sonner";
 import SignInWithGoogleButton from "../../../components/auth/sign-in-with-google-button";
 import { login } from "../../../actions/auth";
+import useUser from "@/hooks/use-user";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -30,6 +31,7 @@ const formSchema = z.object({
 
 export default function SignIn() {
   const router = useRouter();
+  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,7 +49,6 @@ export default function SignIn() {
       toast("Welcome back!", {
         description: "You have successfully signed in.",
       });
-      router.push("/");
     } catch (error) {
       console.error("Sign in error:", error);
       toast.error("Sign in failed", {
@@ -57,7 +58,12 @@ export default function SignIn() {
       setIsLoading(false);
     }
   }
-
+  if (user) {
+    toast("This page is only for unauthenticated", {
+      description: "redirecting...",
+    });
+    router.replace("/");
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-black bg-opacity-90 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/c31c3123-3df7-4359-8b8c-475bd2d9925d/15feb590-3d73-45e9-9e4a-2eb334c83921/US-en-20231225-popsignuptwoweeks-perspective_alpha_website_large.jpg')] bg-no-repeat bg-center bg-cover">
       <div className="absolute inset-0 bg-black bg-opacity-60"></div>

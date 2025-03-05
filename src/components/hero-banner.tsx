@@ -23,7 +23,7 @@ export default function HeroBanner({
     if (!autoplay) return;
 
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 5);
+      setCurrentSlide((prev) => (prev + 1) % film.posterUrl.length);
     }, 8000);
 
     return () => clearInterval(interval);
@@ -33,7 +33,7 @@ export default function HeroBanner({
     <div className="relative w-full h-[70vh] md:h-[80vh] lg:h-[90vh]">
       <div className="absolute inset-0">
         <Image
-          src={film.posterurl[currentSlide]}
+          src={film.posterUrl[currentSlide]}
           alt={film.title}
           fill
           priority

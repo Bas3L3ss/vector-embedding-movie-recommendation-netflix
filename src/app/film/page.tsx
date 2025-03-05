@@ -11,6 +11,7 @@ import { searchFilmsByText } from "../../actions/films";
 import useUser from "../../hooks/use-user";
 
 export default function SearchPage() {
+  // TODO: implement react-query
   const { user } = useUser();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
@@ -93,7 +94,31 @@ export default function SearchPage() {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {results.map((film) => (
-              <FilmCard user={user} key={film.id} film={film} />
+              <FilmCard
+                user={user}
+                key={film.id}
+                film={results.map((film) => {
+                  return {
+                    cast: film.cast,
+                    country: film.country,
+                    createdAt: film.createdAt,
+                    description: film.description,
+                    posterUrl: film.posterurl,
+                    director: film.director,
+                    duration: film.duration,
+                    featured: film.featured,
+                    genre: film.genre,
+                    id: film.id,
+                    language: film.language,
+                    rating: film.rating,
+                    releaseYear: film.releaseYear,
+                    title: film.title,
+                    trailerUrl: film.trailerUrl,
+                    updatedAt: film.updatedAt,
+                    videoUrl: film.videoUrl,
+                  };
+                })}
+              />
             ))}
           </div>
         </div>

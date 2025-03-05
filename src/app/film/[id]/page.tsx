@@ -34,7 +34,6 @@ export default async function FilmPage({
   const films = await getFilmById(id);
   const film: Movie = films[0];
   const user = (await (await createClient()).auth.getUser()).data.user;
-  console.log(film);
 
   if (!film) {
     notFound();
@@ -500,7 +499,31 @@ export default async function FilmPage({
                 Because you watched {film.title}
               </span>
             </h2>
-            <FilmCarousel user={user} title="" films={similarFilms} />
+            <FilmCarousel
+              user={user}
+              title=""
+              films={similarFilms.map((similarFilm) => {
+                return {
+                  cast: similarFilm.cast,
+                  country: similarFilm.country,
+                  createdAt: similarFilm.createdAt,
+                  description: similarFilm.description,
+                  posterUrl: similarFilm.posterurl,
+                  director: similarFilm.director,
+                  duration: similarFilm.duration,
+                  featured: similarFilm.featured,
+                  genre: similarFilm.genre,
+                  id: similarFilm.id,
+                  language: similarFilm.language,
+                  rating: similarFilm.rating,
+                  releaseYear: similarFilm.releaseYear,
+                  title: similarFilm.title,
+                  trailerUrl: similarFilm.trailerUrl,
+                  updatedAt: similarFilm.updatedAt,
+                  videoUrl: similarFilm.videoUrl,
+                };
+              })}
+            />
           </div>
         )}
       </div>

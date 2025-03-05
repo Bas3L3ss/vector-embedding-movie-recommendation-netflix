@@ -75,7 +75,7 @@ const HeroBannerCta = ({
       <Button
         size="lg"
         variant="outline"
-        className="bg-gray-500/30 hover:bg-gray-500/50 border-none text-white font-semibold"
+        className="bg-gray-500 hover:bg-gray-500 border-none  font-semibold"
         onClick={() => router.push(`/film/${film.id}`)}
       >
         <Info className="mr-2 h-5 w-5" />
@@ -85,7 +85,7 @@ const HeroBannerCta = ({
       <Button
         size="icon"
         variant="outline"
-        className="ml-auto h-10 w-10 rounded-full border-white/40 bg-black/30 hover:bg-black/50"
+        className="ml-auto h-10 w-10 rounded-full text-white border-white/40 bg-black/30 hover:bg-black/50"
         onClick={toggleFavorite}
       >
         {favorite ? (
@@ -98,7 +98,7 @@ const HeroBannerCta = ({
       <Button
         size="icon"
         variant="outline"
-        className="h-10 w-10 rounded-full border-white/40 bg-black/30 hover:bg-black/50"
+        className="h-10 w-10 rounded-full border-white/40 bg-black/30 text-white hover:bg-black/50"
         onClick={() => setMuted(!muted)}
       >
         {muted ? (

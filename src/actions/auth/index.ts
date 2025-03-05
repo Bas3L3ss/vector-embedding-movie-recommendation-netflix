@@ -9,45 +9,39 @@ export async function login(email: string, password: string) {
 
   // type-casting here for convenience
   // in practice, you should validate your inputs
-  const data = {
+  const credential = {
     email,
     password,
   };
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { error } = await supabase.auth.signInWithPassword(credential);
 
   if (error) {
-    redirect("/error");
+    throw new Error("Wrong credentials");
   }
-
-  revalidatePath("/", "layout");
-  redirect("/");
 }
 
 export async function signup(email: string, password: string) {
   const supabase = await createClient();
 
-  const data = {
+  const credential = {
     email,
     password,
   };
 
-  const { error } = await supabase.auth.signUp(data);
+  const { error } = await supabase.auth.signUp(credential);
 
   if (error) {
+    console.log(error);
     redirect("/error");
   }
-
-  revalidatePath("/", "layout");
-  redirect("/");
 }
 
 export async function signout() {
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
   if (error) {
-    console.log(error);
-    redirect("/error");
+    throw new Error("Wrong credentials");
   }
 
   redirect("/auth/logout");

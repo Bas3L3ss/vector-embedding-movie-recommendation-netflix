@@ -1,6 +1,7 @@
 "use server";
 import { cache } from "@/lib/cache";
 import { hf } from "../../lib/huggingface";
+import { redis } from "@/lib/redis";
 
 export async function generateEmbedding(text: string) {
   const response = await hf.featureExtraction({
@@ -15,11 +16,19 @@ export async function generateEmbedding(text: string) {
 
 // TODO: also apply redis
 async function cachedEmbedding(query: string) {
-  console.log("no embedding cache for ", query);
+  const cached = await redis.get(`embedding:${query}`);
+  if (cached) {
+    console.log("Embedding cache hit for:", query);
+    return JSON.parse(cached);
+  }
 
-  let queryVector: number[] | null = null;
+  console.log("No embedding cache for:", query);
 
-  queryVector = await generateEmbedding(query);
+  // Generate new embedding
+  const queryVector = await generateEmbedding(query);
+
+  // Store in Redis with expiration (e.g., 24 hours)
+  await redis.setex(`embedding:${query}`, 86400, JSON.stringify(queryVector));
 
   return queryVector;
 }

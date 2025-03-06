@@ -35,8 +35,7 @@ export default async function FilmPage({
   params: Promise<{ id: string }>;
 }) {
   const id = (await params).id;
-  const films = await getFilmById(id);
-  const film: Movie = films[0];
+  const film: Movie = await getFilmById(id);
   const user = (await (await createClient()).auth.getUser()).data.user;
   let favorites;
   if (!film) {
@@ -47,6 +46,7 @@ export default async function FilmPage({
   }
 
   const genres = film.genre;
+
   const similarFilms: Movie[] = await findSimilarMovies(
     //@ts-expect-error: no problem
     film.embedding,
@@ -517,6 +517,7 @@ export default async function FilmPage({
               title=""
               //@ts-expect-error: no problem
               favorites={favorites}
+              //@ts-expect-error: no problem
               films={similarFilms.map((similarFilm) => {
                 return {
                   cast: similarFilm.cast,

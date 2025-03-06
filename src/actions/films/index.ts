@@ -2,41 +2,96 @@ import { prisma } from "../../lib/db";
 import { Genre, Movie } from "@prisma/client";
 import { generateCachedEmbedding } from "../embedding";
 import { supabase } from "@/lib/supabase/client";
+import { cache } from "@/lib/cache";
 
-export async function getFilms() {
-  const films = await prisma.movie.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  return films;
-}
-export async function getFilmsByGenre(genre: Genre) {
-  const films = await prisma.movie.findMany({
-    where: {
-      genre: {
-        has: genre,
+// TODO: pagination for getFilms, getFilmsByGenre, getFeaturedFilm
+async function cachedGetFilms() {
+  try {
+    const films = await prisma.movie.findMany({
+      orderBy: {
+        createdAt: "desc",
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+      take: 20,
+    });
 
-  return films;
+    return films.map((f) => ({
+      ...f,
+      id: f.id.toString(),
+      rating: f.rating?.toNumber(),
+    }));
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 }
-export async function getFeaturedFilm() {
-  const film = await prisma.movie.findFirst({
-    where: {
-      featured: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+const getCachedFilms = () => {
+  return cache(cachedGetFilms, ["films"], {
+    revalidate: 3600,
+  })();
+};
+export async function getFilms() {
+  return await getCachedFilms();
+}
 
-  return film;
+async function cachedGetFilmsByGenre(genre: Genre) {
+  try {
+    const films = await prisma.movie.findMany({
+      where: {
+        genre: {
+          has: genre,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20,
+    });
+
+    return films.map((f) => ({
+      ...f,
+      id: f.id.toString(),
+      rating: f.rating?.toNumber(),
+    }));
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+const getCachedFilmsByGenre = (genre: Genre) => {
+  return cache(cachedGetFilmsByGenre, ["films", genre], {
+    revalidate: 3600,
+  })(genre);
+};
+export async function getFilmsByGenre(genre: Genre) {
+  return await getCachedFilmsByGenre(genre);
+}
+
+async function cachedFeaturedFilm() {
+  try {
+    const film = await prisma.movie.findFirst({
+      where: { featured: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!film) return null;
+    return {
+      ...film,
+      rating: Number(film.rating),
+      id: film.id.toString(),
+    };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+const getCachedFeaturedFilm = () => {
+  return cache(cachedFeaturedFilm, ["featured-films"], {
+    revalidate: 3600,
+  })();
+};
+export async function getFeaturedFilm() {
+  return await getCachedFeaturedFilm();
 }
 
 export async function addFilms(films: Movie[]) {

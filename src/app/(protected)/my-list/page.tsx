@@ -27,6 +27,7 @@ export default async function MyListPage() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {favorites.map(({ Movie, filmId }) => (
+            //@ts-expect-error: no problem (any[] problem)
             <FilmCard user={user} key={filmId} film={Movie} isFavorite={true} />
           ))}
         </div>

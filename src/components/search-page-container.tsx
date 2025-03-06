@@ -20,7 +20,7 @@ const SearchPageContainer = ({
   favorites?: { filmId: string; Movie: Movie[] }[];
 }) => {
   // TODO: implement react-query
-  const [searchQuery, setSearchQuery] = useState(query);
+  const [searchQuery, setSearchQuery] = useState(query ?? "");
   const router = useRouter();
 
   const handleSearch = (e: React.FormEvent) => {
@@ -83,6 +83,7 @@ const SearchPageContainer = ({
                   country: film.country,
                   createdAt: film.createdAt,
                   description: film.description,
+                  //@ts-expect-error: no problem (posterUrl but supabase return posterurl )
                   posterUrl: film.posterurl,
                   director: film.director,
                   duration: film.duration,

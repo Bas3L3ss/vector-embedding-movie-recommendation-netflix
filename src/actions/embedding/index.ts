@@ -1,6 +1,6 @@
 "use server";
+import { cache } from "@/lib/cache";
 import { hf } from "../../lib/huggingface";
-// import { redis } from "@/lib/redis";
 
 export async function generateEmbedding(text: string) {
   const response = await hf.featureExtraction({
@@ -13,25 +13,20 @@ export async function generateEmbedding(text: string) {
   return response as number[]; // Returns embedding vector
 }
 
-export async function generateCachedEmbedding(
-  query: string
-): Promise<number[]> {
+async function cachedEmbedding(query: string) {
+  console.log("no embedding cache for ", query);
+
   let queryVector: number[] | null = null;
-  // TODO: add caching
-  // const cached = await redis.get(`query:${query}`);
 
-  // if (cached) {
-  //   try {
-  //     queryVector = JSON.parse(cached) as number[];
-  //   } catch (error) {
-  //     console.error("Failed to parse cached embedding:", error);
-  //   }
-  // }
-
-  // if (!queryVector) {
   queryVector = await generateEmbedding(query);
-  // await redis.set(`query:${query}`, JSON.stringify(queryVector), "EX", 3600); // Cache for 1 hour
-  // }
 
   return queryVector;
+}
+const getCachedEmbedding = (query: string) => {
+  return cache(cachedEmbedding, ["query", query], {
+    revalidate: false,
+  })(query);
+};
+export async function generateCachedEmbedding(query: string) {
+  return await getCachedEmbedding(query);
 }

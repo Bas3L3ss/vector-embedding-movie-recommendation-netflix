@@ -2,7 +2,7 @@
 
 import { addFilms } from "@/actions/films";
 import { Button } from "@/components/ui/button";
-import { data } from "@/lib/ mockdata";
+import { data } from "@/lib/mockdata";
 import React from "react";
 
 const Page = () => {

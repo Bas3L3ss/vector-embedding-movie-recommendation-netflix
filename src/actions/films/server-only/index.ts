@@ -1,6 +1,7 @@
 import { generateCachedEmbedding } from "@/actions/embedding";
 import { createClient } from "@/lib/supabase/server";
 
+// TODO: pagination for getFavorites, findSimilarMovies
 export async function getFavorites(userId: string) {
   try {
     const { data: favorites, error } = await (await createClient())
@@ -18,10 +19,9 @@ export async function getFavorites(userId: string) {
     return [];
   }
 }
+
 export async function getFilmById(id: string) {
   try {
-    // Fetch only the id and embedding columns from the Movie table
-
     const { data, error } = await (
       await createClient()
     )
@@ -29,25 +29,21 @@ export async function getFilmById(id: string) {
       .select("*")
 
       .eq("id", id);
-    // Filter by the provided id
 
     if (error) {
       console.error("Error fetching film by ID:", error);
 
       return [];
-
-      // Return an empty array in case of error
     }
 
     return data;
-    // Return the fetched data
   } catch (error) {
     console.error("Unexpected error:", error);
 
     return [];
-    // Return an empty array in case of unexpected error
   }
 }
+
 export async function findSimilarMovies(
   queryVector: number[],
   threshold: number,

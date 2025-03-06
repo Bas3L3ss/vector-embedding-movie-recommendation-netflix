@@ -19,18 +19,17 @@ const useToggleFavorite = (
     }
 
     try {
-      await toggleFavorites(user.id, film.id, isFavorite);
+      await toggleFavorites(user.id, film.id, favorite);
       if (favorite) {
-        setFavorite(false);
         toast("Removed from My List", {
           description: `${film.title} has been removed from your list`,
         });
       } else {
-        setFavorite(true);
         toast("Added to My List", {
           description: `${film.title} has been added to your list`,
         });
       }
+      setFavorite((prev) => !prev);
     } catch (error) {
       console.error("Error toggling favorite:", error);
       toast.error("Error", {

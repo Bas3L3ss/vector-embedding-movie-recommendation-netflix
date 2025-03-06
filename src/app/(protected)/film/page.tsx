@@ -13,7 +13,7 @@ export default async function SearchPage({
 
   const user = (await (await createClient()).auth.getUser()).data.user;
 
-  const similarFilm = await searchFilmsByText(query, 0);
+  const similarFilm = await searchFilmsByText(query);
   let favorites;
   if (user) {
     favorites = await getFavorites(user.id);

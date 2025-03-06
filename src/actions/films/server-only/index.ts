@@ -1,7 +1,6 @@
 import { generateCachedEmbedding } from "@/actions/embedding";
 import { createClient } from "@/lib/supabase/server";
 
-// TODO: pagination for getFavorites, findSimilarMovies
 export async function getFavorites(userId: string) {
   try {
     const { data: favorites, error } = await (await createClient())
@@ -56,7 +55,7 @@ export async function findSimilarMovies(
     query_embedding: queryVector,
     similarity_threshold: 0.3,
   });
-  console.log(result);
+  // console.log(result);
 
   if (!result.data) {
     return [];

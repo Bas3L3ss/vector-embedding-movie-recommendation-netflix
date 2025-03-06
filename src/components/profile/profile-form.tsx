@@ -60,14 +60,9 @@ export default function ProfileForm({
     setIsLoading(true);
     try {
       const supabaseClient = supabase();
-      const { error } = await supabaseClient
-        .from("auth.users") // Assuming you have a profiles table linked to auth.users
-        .update({
-          raw_user_meta_data: {
-            name: values.name,
-          },
-        }) // Use the correct column name
-        .eq("UID", user.id); // Ensure this matches your foreign key
+      const { error } = await supabaseClient.auth.updateUser({
+        data: { name: values.name },
+      });
       if (error) throw error;
 
       toast("Profile updated", {

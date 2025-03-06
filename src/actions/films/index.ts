@@ -10,7 +10,7 @@ import {
   randomDirectors,
 } from "@/lib/mockdata";
 
-// TODO: pagination for getFilms, getFilmsByGenre, getFeaturedFilm
+// TODO: pagination for getFilmsByGenre
 async function cachedGetFilms() {
   try {
     const films = await prisma.movie.findMany({
@@ -50,7 +50,7 @@ async function cachedGetFilmsByGenre(genre: Genre) {
       orderBy: {
         createdAt: "desc",
       },
-      take: 20,
+      take: 10,
     });
 
     return films.map((f) => ({

@@ -135,39 +135,48 @@ const NavBar = () => {
                               user.user_metadata.picture ??
                               "/placeholder-user.jpg"
                             }
-                            alt={user.email || ""}
+                            alt={user.user_metadata.name ?? user.email}
                           />
-                          <AvatarFallback className="rounded-sm bg-red-600">
-                            {user.email?.charAt(0).toUpperCase() || "U"}
+                          <AvatarFallback className="rounded-sm bg-red-700">
+                            {user.user_metadata.name[0].toUpperCase() || "U"}
                           </AvatarFallback>
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
-                      className="w-fit"
+                      className="w-fit  bg-black border-red-600  text-white"
                       align="end"
                       forceMount
                     >
-                      <DropdownMenuLabel className="font-normal">
+                      <DropdownMenuLabel className="font-normal ">
                         <div className="flex flex-col space-y-1">
                           <p className="text-sm font-medium leading-none">
-                            {user.email}
+                            {user.user_metadata.name ?? user.email}
                           </p>
                         </div>
                       </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
+                      <DropdownMenuSeparator className="bg-red-700 " />
+                      <DropdownMenuItem
+                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
+                        asChild
+                      >
                         <Link href="/profile">Profile</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
+                      <DropdownMenuItem
+                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
+                        asChild
+                      >
                         <Link href="/my-list">My List</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
+                      <DropdownMenuItem
+                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
+                        asChild
+                      >
                         <Link href="/account">Account</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
+                      <DropdownMenuSeparator className="bg-red-700" />
                       <DropdownMenuItem
-                        className="cursor-pointer"
+                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
                         onClick={() => signout()}
                       >
                         Sign out
@@ -177,7 +186,7 @@ const NavBar = () => {
                 ) : (
                   <Button
                     variant="ghost"
-                    className="text-white hover:text-white hover:bg-red-700 bg-red-600"
+                    className="text-white hover:text-white hover:bg-red-700 bg-red-700"
                     onClick={() => router.push("/auth/signin")}
                   >
                     Sign In
@@ -251,16 +260,16 @@ const NavBar = () => {
                         src={
                           user.user_metadata.picture ?? "/placeholder-user.jpg"
                         }
-                        alt={user.email || ""}
+                        alt={user.user_metadata.name ?? user.email}
                       />
-                      <AvatarFallback className="rounded-sm bg-red-600">
-                        {user.email?.charAt(0).toUpperCase() || "U"}
+                      <AvatarFallback className="rounded-sm bg-red-700">
+                        {user.user_metadata.name[0].toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">
-                      {user.email}
+                      {user.user_metadata.name ?? user.email}
                     </div>
                   </div>
                 </div>
@@ -300,7 +309,7 @@ const NavBar = () => {
             ) : (
               <div className="px-4">
                 <Button
-                  className="w-full bg-red-600 hover:bg-red-700 text-white"
+                  className="w-full bg-red-700 hover:bg-red-700 text-white"
                   onClick={() => {
                     router.push("/auth/signin");
                     setIsMobileMenuOpen(false);

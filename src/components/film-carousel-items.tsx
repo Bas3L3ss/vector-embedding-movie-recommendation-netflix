@@ -121,7 +121,6 @@ const FilmCarouselItems = ({
       >
         {films.map((film) => (
           <div key={film.id} className="group flex-none w-[250px] md:w-[280px]">
-            {/* TODO: dynamic favourite */}
             <FilmCard
               user={user}
               film={film}

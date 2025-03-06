@@ -6,8 +6,6 @@ interface ProfileHeaderProps {
 }
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
-  console.log(user);
-
   return (
     <div className="mb-8">
       <div className="flex items-center gap-4">
@@ -17,7 +15,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             alt={user?.email || ""}
           />
           <AvatarFallback className="rounded-md bg-red-600 text-2xl">
-            {user?.email?.charAt(0).toUpperCase() || "U"}
+            {user?.user_metadata.name[0].toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
 

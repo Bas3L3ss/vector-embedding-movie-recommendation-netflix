@@ -26,7 +26,9 @@ export default function FilmCard({
     film,
     isFavorite
   );
-
+  if (!film) {
+    return null;
+  }
   return (
     <Link href={`/film/${film.id}`}>
       <div

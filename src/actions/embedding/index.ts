@@ -4,7 +4,7 @@ import { hf } from "../../lib/huggingface";
 
 export async function generateEmbedding(text: string) {
   const response = await hf.featureExtraction({
-    model: "sentence-transformers/all-mpnet-base-v2",
+    model: "intfloat/e5-large-v2",
     inputs: text,
     parameters: {},
     headers: { Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}` },
@@ -13,6 +13,7 @@ export async function generateEmbedding(text: string) {
   return response as number[]; // Returns embedding vector
 }
 
+// TODO: also apply redis
 async function cachedEmbedding(query: string) {
   console.log("no embedding cache for ", query);
 

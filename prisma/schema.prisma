@@ -15,7 +15,7 @@ datasource db {
 
 model Movie {
   id              BigInt     @id @default(autoincrement())
-  title           String     @db.VarChar(255)
+  title           String     @db.VarChar(255) @unique
   description     String?
   releaseYear     Int
   genre           Genre[]    
@@ -29,9 +29,10 @@ model Movie {
   posterUrl       String[]    @db.VarChar(255) // Image URL
   trailerUrl      String[]    @db.VarChar(255) // YouTube or other sources
   videoUrl        String[]    @db.VarChar(255) // Movie source link
-  embedding       Unsupported("vector(768)")
+  embedding       Unsupported("vector(1024)") 
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+  tags            String[] @default([])
 
   favorites Favorite[]
   @@index([createdAt])
@@ -44,17 +45,25 @@ enum Genre {
   CRIME
   DOCUMENTARY
   DRAMA
+  BOLLYWOOD
+  
   FAMILY
   FANTASY
   HISTORY
   HORROR
   MUSIC
+  SUPERHERO
+  MARVEL
+  DC
   MYSTERY
   ROMANCE
   SCI_FI
   THRILLER
   WAR
+  INDIE
   WESTERN
+  PSYCHOLOGICAL
+  HISTORICAL
 }
 
 

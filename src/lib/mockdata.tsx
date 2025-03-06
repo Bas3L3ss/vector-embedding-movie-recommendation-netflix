@@ -1,118 +1,138 @@
 import { Genre, Movie } from "@prisma/client";
 
-export const MockFilms: Movie[] = [
-  {
-    id: 1,
-    title: "The Last Stand",
-    description:
-      "A retired sheriff defends his town from an escaped cartel leader.",
-    releaseYear: 2022,
-    genre: ["ACTION", "THRILLER"],
-    director: "John Doe",
-    cast: ["Jane Smith", "Robert Johnson", "Emily Davis"],
-    duration: 115,
-    language: ["English"],
-    country: "USA",
-    rating: 7.3,
-    featured: true,
-    posterUrl: [
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photo/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-    ],
-    trailerUrl: ["https://youtube.com/trailer1"],
-    videoUrl: ["https://example.com/movie1.mp4"],
-    embedding: [2],
-    createdAt: new Date("2025-01-15T12:00:00Z"),
-    updatedAt: new Date("2025-02-10T14:30:00Z"),
-  },
-  {
-    id: 2,
-    title: "Dreams of Tomorrow",
-    description: "A sci-fi journey through time and alternate realities.",
-    releaseYear: 2023,
-    genre: ["SCI_FI", "DRAMA"],
-    director: "Alice Johnson",
-    cast: ["Michael Brown", "Sarah White", "David Lee"],
-    duration: 132,
-    language: ["English", "French"],
-    country: "Canada",
-    rating: 8.1,
-    featured: false,
-    posterUrl: [
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-    ],
-    trailerUrl: ["https://youtube.com/trailer2"],
-    videoUrl: ["https://example.com/movie2.mp4"],
-    embedding: null,
-    createdAt: new Date("2025-01-20T10:45:00Z"),
-    updatedAt: new Date("2025-02-12T09:20:00Z"),
-  },
-  {
-    id: 3,
-    title: "Lost in Harmony",
-    description: "A heartfelt musical drama about a rising artist.",
-    releaseYear: 2021,
-    genre: ["MUSIC", "ROMANCE"],
-    director: "Emma Watson",
-    cast: ["Chris Evans", "Natalie Portman"],
-    duration: 97,
-    language: ["English", "Spanish"],
-    country: "UK",
-    rating: 7.8,
-    featured: true,
-    posterUrl: [
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-    ],
-    trailerUrl: ["https://youtube.com/trailer3"],
-    videoUrl: ["https://example.com/movie3.mp4"],
-    embedding: null,
-    createdAt: new Date("2024-11-30T18:00:00Z"),
-    updatedAt: new Date("2025-01-15T13:00:00Z"),
-  },
-  {
-    id: 14,
-    title: "Shadows of the Past",
-    description:
-      "A mystery thriller following an investigator’s pursuit of a lost artifact.",
-    releaseYear: 2020,
-    genre: ["MYSTERY", "THRILLER"],
-    director: "Samuel Green",
-    cast: ["Morgan Freeman", "Scarlett Johansson"],
-    duration: 124,
-    language: ["English"],
-    country: "Australia",
-    rating: 8.5,
-    featured: false,
-    posterUrl: [
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-      "https://picsum.photos/600/400",
-    ],
-    trailerUrl: ["https://youtube.com/trailer4"],
-    videoUrl: ["https://example.com/movie4.mp4"],
-    embedding: null,
-    createdAt: new Date("2024-10-05T16:20:00Z"),
-    updatedAt: new Date("2025-02-01T08:15:00Z"),
-  },
-];
 const commonPosterUrls = [
   "https://ucnyynmrpcridchyakug.supabase.co/storage/v1/object/public/posters/Arcane%20(Top%20Rated).jpg",
   "https://ucnyynmrpcridchyakug.supabase.co/storage/v1/object/public/posters/Godzilla%20x%20Kong.jpg",
   "https://ucnyynmrpcridchyakug.supabase.co/storage/v1/object/public/posters/Nevertheless%20(Recommend).png",
   "https://ucnyynmrpcridchyakug.supabase.co/storage/v1/object/public/posters/One%20Piece%20Live%20Action%20(Recommend).jpg",
+];
+
+export const genreTags: Record<Genre, string[]> = {
+  ACTION: ["explosive", "high-energy", "combat", "fight scenes", "adrenaline"],
+  ADVENTURE: ["journey", "epic", "quest", "exploration", "heroic"],
+  ANIMATION: ["animated", "cartoon", "CGI", "family-friendly", "visual"],
+  COMEDY: ["funny", "humor", "hilarious", "satire", "lighthearted"],
+  CRIME: ["criminal", "mafia", "gangsters", "heist", "underworld"],
+  DOCUMENTARY: [
+    "real-life",
+    "true story",
+    "educational",
+    "non-fiction",
+    "informative",
+  ],
+  DRAMA: ["emotional", "character-driven", "intense", "heartfelt", "serious"],
+  FAMILY: ["kids", "wholesome", "feel-good", "animated", "bonding"],
+  FANTASY: ["magical", "mythical", "otherworldly", "supernatural", "legendary"],
+  HISTORY: [
+    "historical",
+    "true events",
+    "biographical",
+    "period piece",
+    "heritage",
+  ],
+  HORROR: ["scary", "terrifying", "haunted", "supernatural", "eerie"],
+  MUSIC: ["musical", "concert", "melody", "performance", "rhythmic"],
+  MYSTERY: ["detective", "whodunit", "clues", "investigation", "secrets"],
+  ROMANCE: [
+    "love story",
+    "passionate",
+    "heartwarming",
+    "relationship",
+    "chemistry",
+  ],
+  SCI_FI: ["futuristic", "technology", "space", "cyberpunk", "aliens"],
+  THRILLER: ["suspenseful", "intense", "edge-of-seat", "twists", "danger"],
+  WAR: ["battle", "military", "combat", "soldiers", "historical conflict"],
+  INDIE: ["independent", "artistic", "low-budget", "creative", "unique"],
+  WESTERN: ["cowboys", "gunslinger", "desert", "horseback", "old west"],
+  PSYCHOLOGICAL: [
+    "mind-bending",
+    "introspective",
+    "manipulation",
+    "dark",
+    "disturbing",
+  ],
+  HISTORICAL: [
+    "authentic",
+    "period drama",
+    "historically accurate",
+    "heritage",
+    "biographical",
+  ],
+};
+
+export const randomDirectors = [
+  // Modern Hollywood
+  "Christopher Nolan",
+  "Quentin Tarantino",
+  "Denis Villeneuve",
+  "Martin Scorsese",
+  "Greta Gerwig",
+  "David Fincher",
+  "Steven Spielberg",
+  "James Cameron",
+  "Ridley Scott",
+  "Wes Anderson",
+
+  // International Filmmakers
+  "Bong Joon-ho", // Korean
+  "Hayao Miyazaki", // Japanese (Animation)
+  "Park Chan-wook", // Korean
+  "Hirokazu Kore-eda", // Japanese
+  "Akira Kurosawa", // Classic Japanese
+  "Jean-Luc Godard", // French New Wave
+  "Federico Fellini", // Italian Classic
+  "Pedro Almodóvar", // Spanish
+  "Guillermo del Toro", // Mexican
+
+  // Classic Hollywood
+  "Alfred Hitchcock",
+  "Stanley Kubrick",
+  "Francis Ford Coppola",
+  "Orson Welles",
+  "Sergio Leone",
+  "Billy Wilder",
+  "Frank Capra",
+];
+
+export const randomCast = [
+  // Popular Hollywood Actors
+  ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+  ["Robert Downey Jr.", "Scarlett Johansson"],
+  ["Brad Pitt", "Edward Norton"],
+  ["Natalie Portman", "Joaquin Phoenix"],
+  ["Tom Hardy", "Cillian Murphy"],
+  ["Margot Robbie", "Ryan Gosling"],
+  ["Florence Pugh", "Timothée Chalamet"],
+  ["Denzel Washington", "Viola Davis"],
+
+  // International Stars
+  ["Song Kang-ho", "Tilda Swinton"], // Korean + Indie
+  ["Rinko Kikuchi", "Hiroyuki Sanada"], // Japanese
+  ["Penélope Cruz", "Antonio Banderas"], // Spanish
+  ["Mads Mikkelsen", "Nikolaj Coster-Waldau"], // Danish
+  ["Jean Dujardin", "Marion Cotillard"], // French
+  ["Tony Leung", "Zhang Ziyi"], // Chinese
+
+  // Classic Actors
+  ["Marlon Brando", "Al Pacino"],
+  ["Humphrey Bogart", "Ingrid Bergman"],
+  ["James Stewart", "Grace Kelly"],
+  ["Audrey Hepburn", "Cary Grant"],
+  ["Clint Eastwood", "Eli Wallach"],
+];
+
+export const languages = [
+  ["English"],
+  ["English", "Japanese"],
+  ["French", "English"],
+  ["Spanish"],
+  ["Korean"],
+  ["Hindi", "English"],
+  ["Mandarin"],
+  ["German", "English"],
+  ["Italian"],
+  ["Portuguese"],
 ];
 
 const movies: {
@@ -121,279 +141,132 @@ const movies: {
   genre: Genre[];
 }[] = [
   {
-    title: "Inception",
+    title: "Your Name (Kimi no Na wa)",
     description:
-      "A skilled thief enters the dreams of others to steal secrets and must pull off an impossible heist.",
-    genre: ["SCI_FI", "THRILLER", "ACTION"],
+      "Two teenagers, a city boy and a rural girl, mysteriously swap bodies across time and space. As they experience each other's lives, they develop an unbreakable bond, but a looming catastrophe threatens to separate them forever. In a race against fate, they must find each other before it's too late.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "The Dark Knight",
+    title: "The Notebook",
     description:
-      "Batman faces his greatest challenge when the Joker unleashes chaos on Gotham City.",
-    genre: ["ACTION", "CRIME", "THRILLER"],
+      "A young couple from different social backgrounds falls deeply in love during the summer of the 1940s. Torn apart by class differences and war, their love story is tested by time, memory, and fate. Years later, an elderly man reads their story to a woman with fading recollections, revealing the true power of enduring love.",
+    genre: ["ROMANCE", "DRAMA"],
+  },
+
+  {
+    title: "Call Me by Your Name",
+    description:
+      "During a summer in 1980s Italy, a 17-year-old boy falls for an older graduate student who visits his family's villa. As they share stolen moments under the Mediterranean sun, their deep connection blossoms into a transformative romance. A story of first love, heartbreak, and the memories that linger forever.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "Interstellar",
+    title: "Before Sunrise",
     description:
-      "A group of astronauts travels through a wormhole to find a new home for humanity.",
-    genre: ["SCI_FI", "ADVENTURE", "DRAMA"],
-  },
-  {
-    title: "Parasite",
-    description:
-      "A poor family schemes to infiltrate a wealthy household, leading to unexpected consequences.",
-    genre: ["THRILLER", "DRAMA"],
-  },
-  {
-    title: "The Shawshank Redemption",
-    description:
-      "A banker is sentenced to life in prison and forms an unlikely friendship while planning his escape.",
-    genre: ["DRAMA", "CRIME"],
-  },
-  {
-    title: "Avengers: Endgame",
-    description:
-      "The Avengers assemble one final time to undo Thanos' devastating snap and restore the universe.",
-    genre: ["ACTION", "SCI_FI", "ADVENTURE"],
-  },
-  {
-    title: "Spirited Away",
-    description:
-      "A young girl enters a mystical world ruled by spirits and must find a way to free her parents.",
-    genre: ["ANIMATION", "FANTASY", "ADVENTURE"],
-  },
-  {
-    title: "The Godfather",
-    description:
-      "The aging patriarch of an organized crime dynasty transfers control to his reluctant son.",
-    genre: ["CRIME", "DRAMA"],
-  },
-  {
-    title: "Pulp Fiction",
-    description:
-      "A nonlinear tale of crime, redemption, and dark humor in the underworld of Los Angeles.",
-    genre: ["CRIME", "THRILLER"],
+      "A chance encounter on a train leads to an unforgettable night in Vienna between two strangers. Knowing they have only a few hours together, they explore the city, exchanging thoughts on love, life, and destiny. As dawn approaches, they must decide if their connection is fleeting or meant to last.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
     title: "Titanic",
     description:
-      "A young couple from different social classes fall in love aboard the ill-fated Titanic.",
+      "A wealthy young woman and a struggling artist fall in love aboard the doomed Titanic. As their love defies social barriers, they face the ultimate test when the ship meets its tragic fate. A sweeping romance of passion, sacrifice, and the power of true love.",
     genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "The Matrix",
+    title: "A Moment to Remember (Korean)",
     description:
-      "A hacker discovers that reality is a simulation and joins a rebellion against its controllers.",
-    genre: ["SCI_FI", "ACTION"],
+      "A young woman and a devoted husband build a beautiful life together, only to have it shattered by early-onset Alzheimer's. As her memories fade, he fights to keep their love alive, cherishing every fleeting moment. A heartbreaking yet inspiring story of unconditional love and devotion.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "The Lion King",
+    title: "My Sassy Girl (Korean)",
     description:
-      "A young lion prince flees his kingdom only to learn the true meaning of responsibility.",
-    genre: ["ANIMATION", "FAMILY", "ADVENTURE"],
+      "A kind-hearted man crosses paths with an unpredictable and strong-willed woman, leading to a whirlwind romance. As they navigate her eccentricities and troubled past, he discovers the depth of her pain and love. A touching mix of humor, fate, and heartfelt emotions.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "The Silence of the Lambs",
+    title: "Winter Sonata (Korean)",
     description:
-      "A young FBI agent seeks the help of a manipulative killer to catch a serial murderer.",
-    genre: ["THRILLER", "CRIME"],
+      "A young woman falls for a mysterious man who reminds her of a long-lost childhood love. As they uncover secrets from the past, their romance is tested by fate, memory loss, and heartbreak. A timeless K-drama that redefined love stories in Korean entertainment.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "Gladiator",
+    title: "Dilwale Dulhania Le Jayenge (Bollywood)",
     description:
-      "A betrayed Roman general seeks vengeance against the corrupt emperor who murdered his family.",
-    genre: ["ACTION", "DRAMA"],
+      "Two young people meet and fall in love during a European trip, but family traditions threaten to keep them apart. As he travels to India to win over her strict family, he faces obstacles that test his love and determination. An iconic Bollywood romance that celebrates love, culture, and destiny.",
+    genre: ["ROMANCE", "DRAMA", "BOLLYWOOD"],
   },
   {
-    title: "Forrest Gump",
+    title: "Kabir Singh (Bollywood)",
     description:
-      "A kind-hearted man unintentionally influences several historical events throughout his life.",
-    genre: ["DRAMA", "ROMANCE"],
+      "A brilliant but self-destructive surgeon spirals into alcohol and rage when the love of his life is forced to marry someone else. As he loses himself in pain and obsession, he must find redemption before it's too late. A gripping tale of passion, heartbreak, and self-destruction.",
+    genre: ["ROMANCE", "DRAMA", "BOLLYWOOD"],
   },
   {
-    title: "Joker",
+    title: "Veer-Zaara (Bollywood)",
     description:
-      "A mentally troubled comedian turns to crime and starts a revolution in Gotham City.",
-    genre: ["THRILLER", "DRAMA"],
+      "An Indian Air Force pilot and a Pakistani woman fall deeply in love, but political tensions and family honor tear them apart. Imprisoned for decades, he silently waits for justice, while she keeps his love alive in her heart. A saga of love, sacrifice, and the unbreakable bonds that transcend borders.",
+    genre: ["ROMANCE", "DRAMA", "BOLLYWOOD"],
   },
   {
-    title: "Toy Story",
+    title: "The Fault in Our Stars",
     description:
-      "A cowboy doll feels threatened when a new space ranger toy enters his owner's life.",
-    genre: ["ANIMATION", "FAMILY", "COMEDY"],
+      "Two teenagers, both battling terminal illness, meet in a cancer support group and embark on a journey of love and discovery. As they navigate life’s fleeting moments, they find beauty in their shared struggles. A heartbreaking yet uplifting story of love, loss, and the impact of a single lifetime.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "The Lord of the Rings: The Fellowship of the Ring",
+    title: "Hometown Cha-Cha-Cha (Korean)",
     description:
-      "A hobbit embarks on a dangerous quest to destroy a powerful ring.",
-    genre: ["FANTASY", "ADVENTURE", "ACTION"],
+      "A perfectionist dentist moves to a small coastal town, where she clashes with a warm-hearted and free-spirited handyman. As they grow closer, she learns to embrace life’s simple joys, while he confronts his hidden past. A charming and heartwarming romance set against breathtaking seaside scenery.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "Schindler’s List",
+    title: "Barfi! (Bollywood)",
     description:
-      "A businessman saves the lives of thousands of Jewish refugees during World War II.",
-    genre: ["HISTORY", "DRAMA"],
+      "A charming mute and deaf man forms an extraordinary bond with a woman with autism. Their love story defies norms, challenges society, and teaches the true meaning of happiness. A visually stunning and emotionally moving tale of love in its purest form.",
+    genre: ["ROMANCE", "DRAMA", "BOLLYWOOD"],
   },
   {
-    title: "Django Unchained",
+    title: "Crash Landing on You (Korean)",
     description:
-      "A freed slave teams up with a bounty hunter to rescue his wife from a brutal plantation owner.",
-    genre: ["WESTERN", "ACTION", "DRAMA"],
+      "A South Korean heiress accidentally lands in North Korea during a paragliding accident and is rescued by a stoic North Korean soldier. As they fall in love in the most impossible circumstances, they risk everything to be together. A thrilling and emotional tale of love, fate, and forbidden romance.",
+    genre: ["ROMANCE", "DRAMA"],
   },
   {
-    title: "Whiplash",
+    title: "Aashiqui 2 (Bollywood)",
     description:
-      "A young drummer enrolls in a competitive music conservatory and faces intense training.",
-    genre: ["DRAMA", "MUSIC"],
+      "A fading rockstar discovers a talented singer and helps her rise to fame, but his own demons threaten their love. As she soars to success, he struggles with alcoholism and insecurity, leading to a tragic yet unforgettable romance. A soulful love story that lingers in the heart long after it ends.",
+    genre: ["ROMANCE", "DRAMA", "BOLLYWOOD"],
   },
   {
-    title: "A Quiet Place",
+    title: "Train to Busan (Korean)",
     description:
-      "A family must live in silence to avoid creatures that hunt by sound.",
-    genre: ["HORROR", "THRILLER"],
+      "A workaholic father and his young daughter board a train to Busan, only to find themselves trapped in a zombie outbreak. Amidst the chaos, unexpected bonds form, sacrifices are made, and love prevails even in the darkest times. A gripping mix of horror, action, and emotional storytelling.",
+    genre: ["DRAMA", "THRILLER"],
   },
   {
-    title: "La La Land",
+    title: "Jab We Met (Bollywood)",
     description:
-      "A jazz musician and an aspiring actress fall in love but struggle to balance their dreams.",
-    genre: ["ROMANCE", "MUSIC", "DRAMA"],
-  },
-  {
-    title: "Get Out",
-    description:
-      "A Black man visits his white girlfriend’s family estate and uncovers disturbing secrets.",
-    genre: ["HORROR", "THRILLER"],
-  },
-  {
-    title: "Mad Max: Fury Road",
-    description:
-      "In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler.",
-    genre: ["ACTION", "SCI_FI"],
-  },
-  {
-    title: "Blade Runner 2049",
-    description:
-      "A new blade runner unearths a secret that could plunge society into chaos.",
-    genre: ["SCI_FI", "THRILLER"],
-  },
-  {
-    title: "The Revenant",
-    description:
-      "A frontiersman fights for survival and revenge after being left for dead.",
-    genre: ["ADVENTURE", "DRAMA"],
-  },
-  {
-    title: "The Prestige",
-    description:
-      "Two rival magicians battle for supremacy, pushing each other to deadly extremes.",
-    genre: ["MYSTERY", "THRILLER"],
-  },
-  {
-    title: "The Grand Budapest Hotel",
-    description:
-      "A concierge and his protégé are caught up in a mystery surrounding a valuable painting.",
-    genre: ["COMEDY", "CRIME"],
-  },
-  {
-    title: "The Wolf of Wall Street",
-    description: "A stockbroker rises to wealth through fraud and corruption.",
-    genre: ["COMEDY", "DRAMA"],
-  },
-  {
-    title: "No Country for Old Men",
-    description:
-      "A hunter stumbles upon a drug deal gone wrong and is pursued by a relentless assassin.",
-    genre: ["THRILLER", "CRIME"],
-  },
-  {
-    title: "12 Angry Men",
-    description:
-      "A jury debates a murder case, revealing biases and challenging justice.",
-    genre: ["DRAMA", "CRIME"],
-  },
-  {
-    title: "Coco",
-    description:
-      "A young boy journeys to the Land of the Dead to uncover his family's history.",
-    genre: ["ANIMATION", "MUSIC", "FAMILY"],
-  },
-  {
-    title: "The Conjuring",
-    description:
-      "Paranormal investigators help a family experiencing a terrifying haunting.",
-    genre: ["HORROR", "THRILLER"],
-  },
-  {
-    title: "The Social Network",
-    description:
-      "The story of Facebook’s founding and the legal battles that followed.",
-    genre: ["DRAMA", "ACTION"],
-  },
-  {
-    title: "Shutter Island",
-    description:
-      "A U.S. Marshal investigates a psychiatric facility where nothing is as it seems.",
-    genre: ["THRILLER", "MYSTERY"],
-  },
-  {
-    title: "Oldboy",
-    description:
-      "A man is mysteriously imprisoned for 15 years and then suddenly released.",
-    genre: ["THRILLER", "ACTION"],
-  },
-  {
-    title: "Zootopia",
-    description:
-      "A rabbit police officer and a con artist fox work together to uncover a conspiracy.",
-    genre: ["ANIMATION", "ADVENTURE", "COMEDY"],
-  },
-  {
-    title: "Edge of Tomorrow",
-    description:
-      "A soldier relives the same battle against an alien invasion, learning from each death.",
-    genre: ["SCI_FI", "ACTION"],
-  },
-  {
-    title: "The Irishman",
-    description:
-      "A hitman recalls his involvement in the disappearance of Jimmy Hoffa.",
-    genre: ["CRIME", "DRAMA"],
-  },
-  {
-    title: "Dune",
-    description:
-      "A young nobleman must navigate political intrigue and war on a desert planet.",
-    genre: ["SCI_FI", "ADVENTURE"],
-  },
-  {
-    title: "John Wick",
-    description:
-      "A retired hitman seeks revenge against those who wronged him.",
-    genre: ["ACTION", "THRILLER"],
-  },
-  {
-    title: "Inside Out",
-    description:
-      "A young girl’s emotions struggle to guide her through a life-changing move.",
-    genre: ["ANIMATION", "FAMILY"],
+      "A depressed businessman crosses paths with a lively and talkative woman on a train journey, changing both of their lives forever. As she teaches him to embrace life, he helps her find the courage to follow her heart. A heartwarming and fun-filled love story that redefines fate and second chances.",
+    genre: ["ROMANCE", "DRAMA", "BOLLYWOOD"],
   },
 ];
 
 export const data: Movie[] = Array.from({ length: movies.length }, (_, i) => ({
   title: movies[i].title,
-  releaseYear: 2024,
-  director: "John Doe",
-  cast: ["Actor 1", "Actor 2"],
-  duration: 120 + i, // in minutes
-  language: ["English"],
-  country: "USA",
-  rating: 8.5,
-  featured: i % 2 === 0, // Alternate featured status
-  posterUrl: commonPosterUrls,
-  trailerUrl: ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"], // Mock trailer URL
-  videoUrl: ["https://example.com/movie.mp4"], // Mock video URL
-  createdAt: new Date(),
   description: movies[i].description,
   genre: movies[i].genre,
+  director: randomDirectors[i % randomDirectors.length], // Rotate through directors
+  language: languages[i % languages.length], // Rotate through different languages
+  releaseYear: 1980 + Math.floor(Math.random() * 45), // Random year from 1980-2024
+  cast: randomCast[i % randomCast.length], // Rotate cast
+  duration: 90 + Math.floor(Math.random() * 61), // Duration between 90-150 mins
+  country: i % 4 === 0 ? "Japan" : "USA", // Some foreign films
+  rating: 7 + Math.random() * 2, // Rating between 7.0-9.0
+  featured: i % 2 === 0,
+  posterUrl: commonPosterUrls,
+  trailerUrl: ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"],
+  videoUrl: ["https://example.com/movie.mp4"],
+  createdAt: new Date(),
   updatedAt: new Date(),
+  tags: movies[i].genre.flatMap((g) => genreTags[g] || []),
 }));

@@ -70,7 +70,7 @@ const NavBar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0">
+            <Link href={navItems[0].path} className="flex-shrink-0">
               <div className="w-28 h-8 relative">
                 <svg
                   viewBox="0 0 111 30"
@@ -131,7 +131,10 @@ const NavBar = () => {
                       >
                         <Avatar className="h-8 w-8 rounded-sm">
                           <AvatarImage
-                            src="/placeholder-user.jpg"
+                            src={
+                              user.user_metadata.picture ??
+                              "/placeholder-user.jpg"
+                            }
                             alt={user.email || ""}
                           />
                           <AvatarFallback className="rounded-sm bg-red-600">
@@ -141,7 +144,7 @@ const NavBar = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
-                      className="w-56"
+                      className="w-fit"
                       align="end"
                       forceMount
                     >

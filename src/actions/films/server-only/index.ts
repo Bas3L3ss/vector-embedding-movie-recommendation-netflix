@@ -53,9 +53,12 @@ export async function findSimilarMovies(
     await createClient()
   ).rpc("match_movie", {
     query_embedding: queryVector,
-    similarity_threshold: threshold,
+    similarity_threshold: 0.3,
     match_count: limit,
   });
+  if (!result.data) {
+    return [];
+  }
 
   return result.data;
 }
@@ -66,8 +69,9 @@ export async function searchFilmsByText(query: string) {
   }
   try {
     const vector = await generateCachedEmbedding(query);
+
     if (vector.length > 0) {
-      return await findSimilarMovies(vector, 0.3, 10);
+      return await findSimilarMovies(vector, 0.75, 10);
     }
     return [];
   } catch (error) {

@@ -108,7 +108,9 @@ const NetflixLandingPage = async () => {
             alt="Netflix Background"
             fill
             priority
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
             className="object-cover"
+            quality={90}
           />
         </div>
       </div>

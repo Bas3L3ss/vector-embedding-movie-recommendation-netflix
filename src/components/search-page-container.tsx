@@ -65,7 +65,7 @@ const SearchPageContainer = ({
         </form>
       </div>
 
-      {films.length > 0 ? (
+      {films?.length > 0 ? (
         <div>
           <h2 className="text-2xl font-bold text-white mb-6">
             Search Results for &quot;{query}&quot;
@@ -74,6 +74,7 @@ const SearchPageContainer = ({
             {films.map((film) => (
               <FilmCard
                 isFavorite={
+                  //@ts-expect-error: no problem (posterUrl but supabase return posterurl )
                   favorites && favorites.some((m) => m.filmId == film.id)
                 }
                 user={user}
@@ -83,6 +84,7 @@ const SearchPageContainer = ({
                   country: film.country,
                   createdAt: film.createdAt,
                   description: film.description,
+                  tags: film.tags,
                   //@ts-expect-error: no problem (posterUrl but supabase return posterurl )
                   posterUrl: film.posterurl,
                   director: film.director,

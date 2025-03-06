@@ -50,7 +50,7 @@ export default async function FilmPage({
   const similarFilms: Movie[] = await findSimilarMovies(
     //@ts-expect-error: no problem
     film.embedding,
-    0.3,
+    0.75,
     10
   );
 
@@ -113,9 +113,10 @@ export default async function FilmPage({
       {/* Hero Banner with Video Trailer Overlay */}
       <div className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden">
         <Image
-          src={film?.posterUrl?.[0] || "/placeholder.svg"}
+          src={film?.posterUrl?.[1] || "/placeholder.svg"}
           alt={film.title}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
           priority
           className="object-cover object-center"
         />
@@ -162,6 +163,7 @@ export default async function FilmPage({
               <Image
                 src={film?.posterUrl?.[0] || "/placeholder.svg"}
                 alt={film.title}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
                 fill
                 className="object-cover"
               />

@@ -34,9 +34,10 @@ export default function HeroBanner({
       <div className="absolute inset-0">
         <Image
           src={film.posterUrl[currentSlide]}
-          alt={film.title}
+          alt={`${film.title} poster number ${currentSlide}`}
           fill
           priority
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
           className="object-cover"
         />
 

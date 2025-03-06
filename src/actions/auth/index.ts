@@ -40,10 +40,10 @@ export async function signout() {
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
   if (error) {
-    throw new Error("Wrong credentials");
+    throw error;
   }
 
-  redirect("/auth/logout");
+  redirect("/");
 }
 
 export async function signInWithGoogle() {
@@ -60,7 +60,7 @@ export async function signInWithGoogle() {
 
   if (error) {
     console.log(error);
-    redirect("/error");
+    redirect("/");
   }
 
   redirect(data.url);

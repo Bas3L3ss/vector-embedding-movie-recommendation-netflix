@@ -237,6 +237,9 @@ const NavBar = () => {
                   />
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
+                <Button variant={"destructive"} className="w-full mt-2 ">
+                  Search
+                </Button>
               </form>
             )}
             {user ? (

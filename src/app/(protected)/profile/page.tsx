@@ -24,7 +24,7 @@ export default async function ProfilePage() {
     <section>
       <div className="pt-24 pb-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-white mb-8">Account Profile</h1>
-        <ProfileHeader user={user} userData={userData} />
+        <ProfileHeader user={user} />
         <ProfileContainer user={user} userData={userData} />
       </div>
     </section>

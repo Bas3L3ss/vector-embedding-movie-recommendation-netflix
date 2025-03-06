@@ -47,15 +47,19 @@ export async function getFilmById(id: string) {
 export async function findSimilarMovies(
   queryVector: number[],
   threshold: number,
-  limit: number
+  limit: number,
+  offset: number
 ) {
   const result = await (
     await createClient()
   ).rpc("match_movie", {
+    match_count: 10,
+    offsetnum: 0,
     query_embedding: queryVector,
     similarity_threshold: 0.3,
-    match_count: limit,
   });
+  console.log(result);
+
   if (!result.data) {
     return [];
   }
@@ -63,15 +67,16 @@ export async function findSimilarMovies(
   return result.data;
 }
 
-export async function searchFilmsByText(query: string) {
+export async function searchFilmsByText(query: string, page: number) {
   if (!query) {
     return [];
   }
   try {
     const vector = await generateCachedEmbedding(query);
+    console.log(JSON.stringify(vector));
 
     if (vector.length > 0) {
-      return await findSimilarMovies(vector, 0.75, 10);
+      return await findSimilarMovies(vector, 0.75, 10, page);
     }
     return [];
   } catch (error) {

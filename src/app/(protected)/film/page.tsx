@@ -7,11 +7,13 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ [key: string]: string }>;
 }) {
-  const paramValue = (await searchParams).q;
+  const paramValue = await searchParams;
+  const query = paramValue.q;
+  const genre = paramValue.genre;
 
   const user = (await (await createClient()).auth.getUser()).data.user;
 
-  const similarFilm = await searchFilmsByText(paramValue);
+  const similarFilm = await searchFilmsByText(query, 0);
   let favorites;
   if (user) {
     favorites = await getFavorites(user.id);
@@ -22,8 +24,10 @@ export default async function SearchPage({
       <SearchPageContainer
         favorites={favorites}
         films={similarFilm}
-        query={paramValue}
+        query={query}
         user={user}
+        //@ts-expect-error: no problem typescript wouldnt let me assert the type
+        genres={genre}
       />
     </section>
   );

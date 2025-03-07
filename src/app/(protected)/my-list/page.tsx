@@ -75,8 +75,11 @@ export default async function MyListPage() {
 
   return (
     <section className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-white mb-8">My List</h1>
-
+      <header className="sticky top-0 z-10 bg-black/90 backdrop-blur-sm border-b border-gray-800 p-4">
+        <h1 className="text-2xl font-bold text-red-600">
+          My List {favorites.length > 0 && `(${favorites.length})`}
+        </h1>
+      </header>
       {favorites.length === 0 ? (
         <div className="text-center py-16">
           <h2 className="text-xl text-gray-400 mb-4">Your list is empty</h2>

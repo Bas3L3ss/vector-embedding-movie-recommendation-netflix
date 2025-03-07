@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NotificationItem from "./notification-item";
+import Link from "next/link";
 
 // Types for our notifications
 export type NotificationType = "new-content" | "account" | "recommendation";
@@ -178,9 +179,12 @@ export default function NotificationButton() {
           </div>
 
           <div className="p-3 border-t border-gray-800 text-center">
-            <button className="text-sm text-gray-400 hover:text-white transition">
+            <Link
+              href={"/notification"}
+              className="text-sm text-gray-400 hover:text-white transition"
+            >
               View All Notifications
-            </button>
+            </Link>
           </div>
         </div>
       )}

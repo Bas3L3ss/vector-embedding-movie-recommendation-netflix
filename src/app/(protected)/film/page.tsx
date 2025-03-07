@@ -1,6 +1,51 @@
 import { getFavorites, searchFilmsByText } from "@/actions/films/server-only";
 import SearchPageContainer from "@/components/search-page-container";
 import { createClient } from "@/lib/supabase/server";
+import { Movie } from "@prisma/client";
+import { Metadata } from "next";
+
+export async function generateMetadata(props: {
+  searchParams: Promise<{ [key: string]: string }>;
+}): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const query = searchParams.q;
+  const genre = searchParams.genre;
+  const films: Movie[] = await searchFilmsByText(query);
+
+  const title =
+    films.length > 0 ? `(${films.length}) Films Found | Netflix` : "Netflix";
+  const description = `(${films.length}) Films Found with ${genre} Genres`;
+
+  return {
+    title,
+    description,
+    keywords: ["Netflix", "Films", "Search", `${query}`, `${genre}`],
+    alternates: {
+      canonical: "https://yourwebsite.com/mylist",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://yourwebsite.com/mylist",
+      siteName: "Netflix",
+      images: [
+        {
+          url: "https://yourwebsite.com/og-mylist.jpg",
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: "en_US",
+      type: "video.movie",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://yourwebsite.com/twitter-mylist.jpg"],
+    },
+  };
+}
 
 export default async function SearchPage(props: {
   searchParams: Promise<{ [key: string]: string }>;

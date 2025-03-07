@@ -28,6 +28,55 @@ import {
   getFavorites,
   getFilmById,
 } from "@/actions/films/server-only";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const filmId = (await params).id;
+  const film = await getFilmById(filmId);
+
+  const title = film?.title ? `${film.title} | Netflix` : "Not found";
+  const description = film?.description ?? "";
+  const imageUrl = film?.posterUrl[0];
+  return {
+    title,
+    description,
+    keywords: [
+      "Netflix",
+      `${film?.title}`,
+      `${film?.genre}`,
+      "Watch",
+      `${film?.tags}`,
+    ],
+    alternates: {
+      canonical: imageUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: imageUrl,
+      siteName: "Netflix",
+      images: [
+        {
+          url: imageUrl ?? "",
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: "en_US",
+      type: "video.movie",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [...(film?.posterUrl ?? "")],
+    },
+  };
+}
 
 export default async function FilmPage({
   params,

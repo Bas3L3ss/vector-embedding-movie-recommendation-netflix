@@ -2,6 +2,66 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getFavorites } from "@/actions/films/server-only";
 import FilmCard from "@/components/film-card";
+import { Metadata } from "next";
+import FilmCardV2 from "@/components/film-card-v2";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Fetch user favorites safely
+  const favorites = user?.id ? await getFavorites(user.id) : [];
+
+  const userName = user?.user_metadata?.name ?? "My";
+  const favoriteTitles =
+    favorites
+      //@ts-expect-error: no problem
+      ?.map((fav) => fav.Movie.title)
+      .slice(0, 3)
+      .join(", ") || "Movies";
+
+  const title = `${userName}'s List - Netflix`;
+  const description = `${userName}'s favorite movies: ${favoriteTitles}. Explore your saved movies here.`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      "Netflix",
+      "favorite movies",
+      "watchlist",
+      "streaming",
+      "My List",
+    ],
+    alternates: {
+      canonical: "https://yourwebsite.com/mylist",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://yourwebsite.com/mylist",
+      siteName: "Netflix",
+      images: [
+        {
+          url: "https://yourwebsite.com/og-mylist.jpg",
+          width: 1200,
+          height: 630,
+          alt: `${userName}'s favorite movies`,
+        },
+      ],
+      locale: "en_US",
+      type: "profile",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://yourwebsite.com/twitter-mylist.jpg"],
+    },
+  };
+}
 
 export default async function MyListPage() {
   const { auth } = await createClient();
@@ -25,10 +85,15 @@ export default async function MyListPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {favorites.map(({ Movie, filmId }) => (
-            //@ts-expect-error: no problem (any[] problem)
-            <FilmCard user={user} key={filmId} film={Movie} isFavorite={true} />
+            <FilmCardV2
+              user={user}
+              key={filmId}
+              //@ts-expect-error: no problem (any[] problem)
+              film={Movie}
+              isFavorite={true}
+            />
           ))}
         </div>
       )}

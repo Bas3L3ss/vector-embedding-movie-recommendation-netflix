@@ -1,8 +1,10 @@
 import { generateCachedEmbedding } from "@/actions/embedding";
 import { redis } from "@/lib/redis";
 import { createClient } from "@/lib/supabase/server";
+import { Movie } from "@prisma/client";
 
-export async function getFavorites(userId: string) {
+export async function getFavorites(userId?: string) {
+  if (!userId) return [];
   try {
     const { data: favorites, error } = await (await createClient())
       .from("Favorite")
@@ -21,7 +23,7 @@ export async function getFavorites(userId: string) {
 }
 
 // TODO: find a way to cache getFilmById, use redis
-export async function getFilmById(id: string) {
+export async function getFilmById(id: string): Promise<Movie | null> {
   try {
     // Check Redis cache
     const cachedFilm = await redis.get(`film:${id}`);

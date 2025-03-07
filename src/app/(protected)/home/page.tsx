@@ -1,8 +1,73 @@
+import { Metadata } from "next";
 import { getFeaturedFilm, getFilms, getFilmsByGenre } from "@/actions/films";
 import FilmCarousel from "@/components/film-carousel";
 import HeroBanner from "@/components/hero-banner";
 import { createClient } from "@/lib/supabase/server";
 import { getFavorites } from "@/actions/films/server-only";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const featuredFilm = await getFeaturedFilm();
+
+  const title = featuredFilm
+    ? `${featuredFilm.title} - Watch on Netflix`
+    : "Netflix - Watch TV Shows & Movies Online";
+  const description = featuredFilm
+    ? `Watch ${featuredFilm.title}, starring ${
+        featuredFilm.cast?.[0] ?? "top actors"
+      } on Netflix. Explore trending movies, dramas, and action-packed films.`
+    : "Stream the latest and greatest movies & TV shows on Netflix.";
+
+  return {
+    title,
+    description,
+    keywords: [
+      "Netflix",
+      "stream movies",
+      "watch TV shows",
+      "best films",
+      featuredFilm?.title ?? "Amazing film",
+      //@ts-expect-error: no problem
+      ...(featuredFilm?.genre ? [featuredFilm.genre] : []),
+    ],
+    alternates: {
+      canonical: "https://yourwebsite.com/",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://yourwebsite.com/",
+      siteName: "Netflix",
+      images: [
+        {
+          url:
+            featuredFilm?.posterUrl[0] ??
+            "https://yourwebsite.com/default-og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: featuredFilm ? featuredFilm.title : "Netflix Home",
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [
+        ...(featuredFilm?.posterUrl ??
+          "https://yourwebsite.com/default-twitter-image.jpg"),
+      ],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    other: {
+      "theme-color": "#141414",
+    },
+  };
+}
 
 export default async function Home() {
   const supabase = await createClient();
@@ -13,161 +78,54 @@ export default async function Home() {
     getFeaturedFilm(),
     supabase.auth.getUser(),
   ]);
-  let favorites;
 
+  let favorites;
   if (user && user.data.user?.id) {
     favorites = await getFavorites(user.data.user.id);
   }
 
   const trendingFilms = allFilms.slice(0, 10);
+
   return (
-    <section className=" ">
+    <section>
       {featuredFilm && (
         <HeroBanner
           user={user.data.user}
           isFavorite={favorites?.some((f) => f.filmId == featuredFilm.id)}
-          film={{
-            cast: featuredFilm.cast,
-            country: featuredFilm.country,
-            createdAt: featuredFilm.createdAt,
-            description: featuredFilm.description,
-            posterUrl: featuredFilm.posterUrl,
-            director: featuredFilm.director,
-            duration: featuredFilm.duration,
-            featured: featuredFilm.featured,
-            genre: featuredFilm.genre,
-            //@ts-expect-error: no problem
-            id: featuredFilm.id,
-            language: featuredFilm.language,
-            //@ts-expect-error: no problem
-            rating: featuredFilm.rating,
-            releaseYear: featuredFilm.releaseYear,
-            title: featuredFilm.title,
-            trailerUrl: featuredFilm.trailerUrl,
-            updatedAt: featuredFilm.updatedAt,
-            videoUrl: featuredFilm.videoUrl,
-          }}
+          film={featuredFilm}
         />
       )}
       <div className="mt-4 md:mt-8">
         {trendingFilms.length > 0 && (
           <FilmCarousel
             user={user.data.user}
-            //@ts-expect-error: no problem
             favorites={favorites}
             title="Trending Now"
-            //@ts-expect-error: no problem
-            films={trendingFilms.map((film) => {
-              return {
-                cast: film.cast,
-                country: film.country,
-                createdAt: film.createdAt,
-                description: film.description,
-                posterUrl: film.posterUrl,
-                director: film.director,
-                duration: film.duration,
-                featured: film.featured,
-                genre: film.genre,
-                id: film.id,
-                language: film.language,
-                rating: film.rating,
-                releaseYear: film.releaseYear,
-                title: film.title,
-                trailerUrl: film.trailerUrl,
-                updatedAt: film.updatedAt,
-                videoUrl: film.videoUrl,
-              };
-            })}
+            films={trendingFilms}
           />
         )}
         {dramas.length > 0 && (
           <FilmCarousel
             user={user.data.user}
-            //@ts-expect-error: no problem
             favorites={favorites}
             title="Drama"
-            //@ts-expect-error: it's fine
-            films={dramas.map((film) => {
-              return {
-                cast: film.cast,
-                country: film.country,
-                createdAt: film.createdAt,
-                description: film.description,
-                posterUrl: film.posterUrl,
-                director: film.director,
-                duration: film.duration,
-                featured: film.featured,
-                genre: film.genre,
-                id: film.id,
-                language: film.language,
-                rating: film.rating,
-                releaseYear: film.releaseYear,
-                title: film.title,
-                trailerUrl: film.trailerUrl,
-                updatedAt: film.updatedAt,
-                videoUrl: film.videoUrl,
-              };
-            })}
+            films={dramas}
           />
         )}
         {action.length > 0 && (
           <FilmCarousel
             user={user.data.user}
-            //@ts-expect-error: no problem
             favorites={favorites}
             title="Action"
-            //@ts-expect-error: no problem
-            films={action.map((film) => {
-              return {
-                cast: film.cast,
-                country: film.country,
-                createdAt: film.createdAt,
-                description: film.description,
-                posterUrl: film.posterUrl,
-                director: film.director,
-                duration: film.duration,
-                featured: film.featured,
-                genre: film.genre,
-                id: film.id,
-                language: film.language,
-                rating: film.rating,
-                releaseYear: film.releaseYear,
-                title: film.title,
-                trailerUrl: film.trailerUrl,
-                updatedAt: film.updatedAt,
-                videoUrl: film.videoUrl,
-              };
-            })}
+            films={action}
           />
         )}
         {allFilms.length > 0 && (
           <FilmCarousel
             user={user.data.user}
-            //@ts-expect-error: no problem
             favorites={favorites}
             title="New Releases"
-            //@ts-expect-error: no problem
-            films={allFilms.map((film) => {
-              return {
-                cast: film.cast,
-                country: film.country,
-                createdAt: film.createdAt,
-                description: film.description,
-                posterUrl: film.posterUrl,
-                director: film.director,
-                duration: film.duration,
-                featured: film.featured,
-                genre: film.genre,
-                id: film.id,
-                language: film.language,
-                rating: film.rating,
-                releaseYear: film.releaseYear,
-                title: film.title,
-                trailerUrl: film.trailerUrl,
-                updatedAt: film.updatedAt,
-                videoUrl: film.videoUrl,
-              };
-            })}
+            films={allFilms}
           />
         )}
       </div>

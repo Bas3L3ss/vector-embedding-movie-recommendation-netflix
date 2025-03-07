@@ -19,6 +19,7 @@ import { signout } from "@/actions/auth";
 
 import useUser from "@/hooks/use-user";
 import Loading from "../reusable/loading";
+import NotificationButton from "./notification-button";
 
 const NavBar = () => {
   const { isLoading, user } = useUser();
@@ -115,74 +116,74 @@ const NavBar = () => {
               </form>
             )}
 
-            <Button variant="ghost" size="icon" className="text-white">
-              <Bell className="h-5 w-5" />
-            </Button>
             {isLoading ? (
               <Loading size={7} />
             ) : (
               <>
                 {user ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="relative h-8 w-8 rounded-sm"
+                  <>
+                    <NotificationButton />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="relative h-8 w-8 rounded-sm"
+                        >
+                          <Avatar className="h-8 w-8 rounded-sm">
+                            <AvatarImage
+                              src={
+                                user.user_metadata.picture ??
+                                "/placeholder-user.jpg"
+                              }
+                              alt={user.user_metadata.name ?? user.email}
+                            />
+                            <AvatarFallback className="rounded-sm bg-red-700">
+                              {user.user_metadata.name[0].toUpperCase() || "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="w-fit  bg-black border-red-600  text-white"
+                        align="end"
+                        forceMount
                       >
-                        <Avatar className="h-8 w-8 rounded-sm">
-                          <AvatarImage
-                            src={
-                              user.user_metadata.picture ??
-                              "/placeholder-user.jpg"
-                            }
-                            alt={user.user_metadata.name ?? user.email}
-                          />
-                          <AvatarFallback className="rounded-sm bg-red-700">
-                            {user.user_metadata.name[0].toUpperCase() || "U"}
-                          </AvatarFallback>
-                        </Avatar>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="w-fit  bg-black border-red-600  text-white"
-                      align="end"
-                      forceMount
-                    >
-                      <DropdownMenuLabel className="font-normal ">
-                        <div className="flex flex-col space-y-1">
-                          <p className="text-sm font-medium leading-none">
-                            {user.user_metadata.name ?? user.email}
-                          </p>
-                        </div>
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator className="bg-red-700 " />
-                      <DropdownMenuItem
-                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
-                        asChild
-                      >
-                        <Link href="/profile">Profile</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
-                        asChild
-                      >
-                        <Link href="/my-list">My List</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
-                        asChild
-                      >
-                        <Link href="/account">Account</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-red-700" />
-                      <DropdownMenuItem
-                        className="hover:bg-red-800! hover:text-white! cursor-pointer"
-                        onClick={() => signout()}
-                      >
-                        Sign out
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        <DropdownMenuLabel className="font-normal ">
+                          <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">
+                              {user.user_metadata.name ?? user.email}
+                            </p>
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator className="bg-red-700 " />
+                        <DropdownMenuItem
+                          className="hover:bg-red-800! hover:text-white! cursor-pointer"
+                          asChild
+                        >
+                          <Link href="/profile">Profile</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="hover:bg-red-800! hover:text-white! cursor-pointer"
+                          asChild
+                        >
+                          <Link href="/my-list">My List</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="hover:bg-red-800! hover:text-white! cursor-pointer"
+                          asChild
+                        >
+                          <Link href="/account">Account</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-red-700" />
+                        <DropdownMenuItem
+                          className="hover:bg-red-800! hover:text-white! cursor-pointer"
+                          onClick={() => signout()}
+                        >
+                          Sign out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
                 ) : (
                   <Button
                     variant="ghost"

@@ -5,19 +5,22 @@ import { createClient } from "@/lib/supabase/server";
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string }>;
+  searchParams: { [key: string]: string };
 }) {
-  const paramValue = await searchParams;
-  const query = paramValue.q;
-  const genre = paramValue.genre;
+  const query = searchParams.q;
+  const genre = searchParams.genre;
 
-  const user = (await (await createClient()).auth.getUser()).data.user;
+  const supabase = await createClient();
+  const userPromise = supabase.auth.getUser(); // Start fetching the user early
+  const searchPromise = searchFilmsByText(query);
 
-  const similarFilm = await searchFilmsByText(query);
-  let favorites;
-  if (user) {
-    favorites = await getFavorites(user.id);
-  }
+  const [{ data: userData }, similarFilm] = await Promise.all([
+    userPromise,
+    searchPromise,
+  ]);
+  const user = userData.user;
+
+  const favorites = user ? await getFavorites(user.id) : null;
 
   return (
     <section className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,8 +29,7 @@ export default async function SearchPage({
         films={similarFilm}
         query={query}
         user={user}
-        //@ts-expect-error: no problem typescript wouldnt let me assert the type
-        genres={genre}
+        genres={genre} // TS-Expect error might be resolved now
       />
     </section>
   );

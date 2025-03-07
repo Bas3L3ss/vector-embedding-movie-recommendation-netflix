@@ -65,6 +65,7 @@ export default function FilmCardV2({
             src={film.posterUrl[1] || "/placeholder.svg"}
             alt={film.title}
             fill
+            priority
             className="object-cover transition-transform duration-300 group-hover:scale-110"
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />

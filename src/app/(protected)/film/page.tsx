@@ -2,11 +2,10 @@ import { getFavorites, searchFilmsByText } from "@/actions/films/server-only";
 import SearchPageContainer from "@/components/search-page-container";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string };
+export default async function SearchPage(props: {
+  searchParams: Promise<{ [key: string]: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const query = searchParams.q;
   const genre = searchParams.genre;
 
@@ -25,11 +24,13 @@ export default async function SearchPage({
   return (
     <section className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SearchPageContainer
+        //@ts-expect-error: wouldnt let me assert type
         favorites={favorites}
         films={similarFilm}
         query={query}
         user={user}
-        genres={genre} // TS-Expect error might be resolved now
+        //@ts-expect-error: wouldnt let me assert type
+        genres={genre}
       />
     </section>
   );

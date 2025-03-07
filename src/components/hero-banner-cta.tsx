@@ -37,13 +37,10 @@ const HeroBannerCta = ({
       <Button
         size="lg"
         variant="outline"
-        className="bg-gray-500 hover:bg-gray-500 border-none  font-semibold"
-        onClick={() => router.push(`/film/${film.id}`)}
+        className="bg-gray-500/40 hover:bg-gray-500/60 text-white border-0 gap-2 px-6 rounded-md"
       >
-        <Info className="mr-2 h-5 w-5" />
-        More Info
+        <Info className="w-5 h-5" /> More Info
       </Button>
-
       <Button
         size="icon"
         variant="outline"

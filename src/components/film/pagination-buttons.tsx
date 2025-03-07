@@ -110,7 +110,10 @@ const PaginationButtons = ({
                     handlePageChange(pageNumber as number);
                   }}
                   isActive={currentPage === pageNumber}
-                  className="bg-red-600 hover:bg-red-700 hover:text-white border-none"
+                  className={cn(
+                    "bg-red-600 hover:bg-red-700 hover:text-white border-none",
+                    currentPage === pageNumber && "bg-red-400"
+                  )}
                 >
                   {pageNumber}
                 </PaginationLink>

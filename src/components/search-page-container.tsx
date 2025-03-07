@@ -21,7 +21,7 @@ const SearchPageContainer = ({
   query: string;
   films: Movie[];
   favorites?: { filmId: string; Movie: Movie[] }[];
-  genres?: Genre[];
+  genres?: Genre[] | Genre;
 }) => {
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>(
     Array.isArray(initialGenres)

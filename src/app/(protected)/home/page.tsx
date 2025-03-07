@@ -21,7 +21,7 @@ export default async function Home() {
 
   const trendingFilms = allFilms.slice(0, 10);
   return (
-    <section className="pt-24">
+    <section className=" ">
       {featuredFilm && (
         <HeroBanner
           user={user.data.user}

@@ -51,7 +51,7 @@ const NavBar = () => {
   const navItems = user
     ? [
         { name: "Home", path: "/home" },
-        { name: "TV Shows", path: "/tv-shows" },
+        { name: "TV Shows", path: "/tv-show" },
         { name: "Films", path: "/film" },
         { name: "My List", path: "/my-list" },
       ]

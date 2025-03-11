@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { Toaster } from "sonner";
-import { ThemeProvider } from "../provider/theme-provider";
 import { Separator } from "../components/ui/separator";
 import NProgressLayout from "@/provider/nprogress-provider";
 

@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getFavorites } from "@/actions/films/server-only";
-import FilmCard from "@/components/film-card";
 import { Metadata } from "next";
 import FilmCardV2 from "@/components/film-card-v2";
 
@@ -10,7 +9,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
   // Fetch user favorites safely
   const favorites = user?.id ? await getFavorites(user.id) : [];
 

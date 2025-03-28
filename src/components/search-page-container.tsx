@@ -1,7 +1,7 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Genre, Movie } from "@prisma/client";
 
@@ -52,6 +52,11 @@ const SearchPageContainer = ({
   const indexOfLastFilm = currentPage * itemsPerPage;
   const indexOfFirstFilm = indexOfLastFilm - itemsPerPage;
   const currentFilms = filteredFilms.slice(indexOfFirstFilm, indexOfLastFilm);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setSelectedGenres([]);
+  }, [query]);
 
   return (
     <>

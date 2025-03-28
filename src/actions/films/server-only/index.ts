@@ -22,7 +22,6 @@ export async function getFavorites(userId?: string) {
   }
 }
 
-// TODO: find a way to cache getFilmById, use redis
 export async function getFilmById(id: string): Promise<Movie | null> {
   try {
     // Check Redis cache

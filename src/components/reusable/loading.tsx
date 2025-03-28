@@ -5,9 +5,11 @@ const Loading = ({
   size = 46,
   className,
   text,
+  classNameInner,
 }: {
   size?: number;
   className?: string;
+  classNameInner?: string;
   text?: string;
 }) => {
   return (
@@ -18,7 +20,10 @@ const Loading = ({
       )}
     >
       <div
-        className={`animate-spin rounded-full   border-t-2 border-b-2 border-red-600`}
+        className={cn(
+          `animate-spin rounded-full   border-t-2 border-b-2 border-red-600`,
+          classNameInner
+        )}
         style={{ width: size, height: size }}
       ></div>
       {text && (

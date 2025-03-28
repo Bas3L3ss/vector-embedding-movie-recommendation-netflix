@@ -1,5 +1,5 @@
 import { $Enums, Genre } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Filter, Search, X } from "lucide-react";
@@ -12,6 +12,7 @@ import {
 } from "../ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
+import Loading from "../reusable/loading";
 
 const genreOptions: Genre[] = [
   "ACTION",
@@ -54,6 +55,7 @@ const SearchFilm = ({
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const [searchQuery, setSearchQuery] = useState(query ?? "");
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +71,9 @@ const SearchFilm = ({
       });
     }
 
-    router.push(`/film?${params.toString()}`);
+    startTransition(() => {
+      router.push(`/film?${params.toString()}`);
+    });
   };
 
   const clearSearch = () => {
@@ -101,8 +105,12 @@ const SearchFilm = ({
           <div className="relative flex-1">
             <Input
               type="text"
+              disabled={isPending}
               placeholder="Search for movies, TV shows, genres..."
-              className="bg-gray-900 border-gray-700 text-white pl-10 pr-10 py-6 rounded-md focus:outline-none focus:ring-1 focus:ring-red-600 focus:border-transparent"
+              className={cn(
+                "bg-gray-900 border-gray-700 text-white pl-10 pr-10 py-6 rounded-md focus:outline-none focus:ring-1 focus:ring-red-600 focus:border-transparent disabled:opacity-100",
+                isPending && "animate-pulse"
+              )}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -121,9 +129,14 @@ const SearchFilm = ({
           </div>
           <Button
             type="submit"
-            className="bg-red-600 hover:bg-red-700 text-white py-6"
+            className="bg-red-600 w-[75px]   hover:bg-red-700 text-white py-6"
+            disabled={isPending}
           >
-            Search
+            {isPending ? (
+              <Loading size={16} classNameInner="!border-white" />
+            ) : (
+              "Search"
+            )}
           </Button>
         </div>
 
@@ -142,7 +155,7 @@ const SearchFilm = ({
                     className={cn(selectedGenres.length == 0 && "pr-[25px]")}
                   >
                     Genres
-                  </span>{" "}
+                  </span>
                   {selectedGenres.length > 0 && `(${selectedGenres.length})`}
                   <ChevronDown className="h-4 w-4 ml-2" />
                 </Button>

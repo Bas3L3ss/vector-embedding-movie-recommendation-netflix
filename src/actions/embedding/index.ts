@@ -4,17 +4,22 @@ import { hf } from "../../lib/huggingface";
 import { redis } from "@/lib/redis";
 
 export async function generateEmbedding(text: string) {
-  const response = await hf.featureExtraction({
-    model: "intfloat/e5-large-v2",
-    inputs: text,
-    parameters: {},
-    headers: { Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}` },
-  });
+  try {
+    const response = await hf.featureExtraction({
+      model: "intfloat/e5-large-v2",
+      inputs: text,
+      parameters: {},
+      headers: { Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}` },
+    });
 
-  return response as number[]; // Returns embedding vector
+    return response as number[]; // Returns embedding vector
+  } catch (error) {
+    console.log(error);
+
+    return null;
+  }
 }
 
-// TODO: also apply redis
 async function cachedEmbedding(query: string) {
   const cached = await redis.get(`embedding:${query}`);
   if (cached) {
@@ -29,6 +34,7 @@ async function cachedEmbedding(query: string) {
 
   // Store in Redis with expiration (e.g., 24 hours)
   await redis.setex(`embedding:${query}`, 86400, JSON.stringify(queryVector));
+  console.log("cached", query);
 
   return queryVector;
 }

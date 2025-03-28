@@ -1,5 +1,4 @@
 import Redis from "ioredis";
-// TODO: have redis cache
 const globalForClients = global as unknown as {
   redis?: Redis;
 };

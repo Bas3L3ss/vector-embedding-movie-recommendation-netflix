@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { Bell, Menu, Search, X } from "lucide-react";
 import { Button } from "../ui/button";
@@ -19,7 +19,8 @@ import { signout } from "@/actions/auth";
 
 import useUser from "@/hooks/use-user";
 import Loading from "../reusable/loading";
-import NotificationButton from "./notification-button";
+import { navItems as navData } from "@/constants";
+import { cn } from "@/lib/utils";
 
 const NavBar = () => {
   const { isLoading, user } = useUser();
@@ -28,6 +29,8 @@ const NavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const navItems = navData(user);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,21 +48,12 @@ const NavBar = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/film?q=${encodeURIComponent(searchQuery)}`);
+      startTransition(() => {
+        router.push(`/film?q=${encodeURIComponent(searchQuery)}`);
+      });
     }
   };
 
-  const navItems = user
-    ? [
-        { name: "Home", path: "/home" },
-        { name: "TV Shows", path: "/tv-show" },
-        { name: "Films", path: "/film" },
-        { name: "My List", path: "/my-list" },
-      ]
-    : [
-        { name: "Home", path: "/" },
-        { name: "Login", path: "/auth/signin" },
-      ];
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${
@@ -108,11 +102,20 @@ const NavBar = () => {
                 <Input
                   type="text"
                   placeholder="Search"
-                  className="bg-black bg-opacity-50 border border-gray-700 text-white pl-10 pr-4 py-1 rounded-md focus:outline-none focus:ring-1 focus:ring-white focus:border-transparent w-48"
+                  className={cn(
+                    "bg-black  bg-opacity-50 border border-gray-700 text-white pl-10 pr-4 py-1 rounded-md focus:outline-none focus:ring-1 focus:ring-white focus:border-transparent w-48 disabled:opacity-100",
+                    isPending && "animate-pulse"
+                  )}
                   value={searchQuery}
+                  disabled={isPending}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <button
+                  disabled={isPending}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                >
+                  <Search className=" h-4 w-4 text-gray-400" />
+                </button>
               </form>
             )}
 
@@ -122,7 +125,6 @@ const NavBar = () => {
               <>
                 {user ? (
                   <>
-                    <NotificationButton />
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button

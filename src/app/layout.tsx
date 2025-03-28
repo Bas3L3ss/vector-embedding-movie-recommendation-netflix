@@ -6,6 +6,9 @@ import Footer from "../components/footer";
 import { Toaster } from "sonner";
 import { Separator } from "../components/ui/separator";
 import NProgressLayout from "@/provider/nprogress-provider";
+import { Suspense } from "react"; // ✅ Import Suspense
+import Loading from "@/components/reusable/loading";
+import LoadingPage from "./loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,23 +27,24 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
-        <NProgressLayout>
-          <main className="min-h-screen   bg-black">
-            <Navbar />
-            <Toaster />
-            {children}
-          </main>
-          <Separator className="bg-red-500" />
-          <Footer />
-        </NProgressLayout>
+        {/* ✅ Wrap NProgressLayout in Suspense */}
+        <Suspense fallback={<LoadingPage />}>
+          <NProgressLayout>
+            <main className="min-h-screen bg-black">
+              <Navbar />
+              <Toaster />
+              {children}
+            </main>
+            <Separator className="bg-red-500" />
+            <Footer />
+          </NProgressLayout>
+        </Suspense>
       </body>
     </html>
   );

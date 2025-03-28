@@ -134,13 +134,14 @@ const NavBar = () => {
                           <Avatar className="h-8 w-8 rounded-sm">
                             <AvatarImage
                               src={
-                                user.user_metadata.picture ??
+                                user.user_metadata?.picture ??
                                 "/placeholder-user.jpg"
                               }
-                              alt={user.user_metadata.name ?? user.email}
+                              alt={user.user_metadata?.name ?? user.email}
                             />
                             <AvatarFallback className="rounded-sm bg-red-700">
-                              {user.user_metadata.name[0].toUpperCase() || "U"}
+                              {user.user_metadata?.name?.[0]?.toUpperCase() ||
+                                "U"}
                             </AvatarFallback>
                           </Avatar>
                         </Button>
@@ -153,7 +154,7 @@ const NavBar = () => {
                         <DropdownMenuLabel className="font-normal ">
                           <div className="flex flex-col space-y-1">
                             <p className="text-sm font-medium leading-none">
-                              {user.user_metadata.name ?? user.email}
+                              {user.user_metadata?.name ?? user.email}
                             </p>
                           </div>
                         </DropdownMenuLabel>
@@ -170,12 +171,7 @@ const NavBar = () => {
                         >
                           <Link href="/my-list">My List</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="hover:bg-red-800! hover:text-white! cursor-pointer"
-                          asChild
-                        >
-                          <Link href="/account">Account</Link>
-                        </DropdownMenuItem>
+
                         <DropdownMenuSeparator className="bg-red-700" />
                         <DropdownMenuItem
                           className="hover:bg-red-800! hover:text-white! cursor-pointer"
@@ -261,18 +257,18 @@ const NavBar = () => {
                     <Avatar className="h-10 w-10 rounded-sm">
                       <AvatarImage
                         src={
-                          user.user_metadata.picture ?? "/placeholder-user.jpg"
+                          user.user_metadata?.picture ?? "/placeholder-user.jpg"
                         }
-                        alt={user.user_metadata.name ?? user.email}
+                        alt={user.user_metadata?.name ?? user.email}
                       />
                       <AvatarFallback className="rounded-sm bg-red-700">
-                        {user.user_metadata.name[0].toUpperCase() || "U"}
+                        {user.user_metadata?.name[0].toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">
-                      {user.user_metadata.name ?? user.email}
+                      {user.user_metadata?.name ?? user.email}
                     </div>
                   </div>
                 </div>
@@ -291,13 +287,7 @@ const NavBar = () => {
                   >
                     My List
                   </Link>
-                  <Link
-                    href="/account"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Account
-                  </Link>
+
                   <button
                     className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                     onClick={() => {

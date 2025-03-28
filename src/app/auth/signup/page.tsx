@@ -57,7 +57,7 @@ export default function SignUp() {
         description:
           "You have successfully signed up. Please sign in to continue.",
       });
-      router.push("/auth/signin");
+      // router.push("/auth/signin");
     } catch (error) {
       console.error("Sign up error:", error);
       toast.error("Sign up failed", {

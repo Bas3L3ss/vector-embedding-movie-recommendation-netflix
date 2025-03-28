@@ -7,7 +7,7 @@ const SignInWithGoogleButton = () => {
   return (
     <Button
       variant="outline"
-      className="w-full mt-4 bg-transparent border-gray-600 text-white hover:bg-gray-800"
+      className="w-full mt-4 bg-transparent border-gray-600 text-white hover:bg-accent-foreground hover:text-white"
       onClick={signInWithGoogle}
     >
       <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">

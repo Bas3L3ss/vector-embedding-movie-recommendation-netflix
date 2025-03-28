@@ -16,7 +16,7 @@ export async function login(email: string, password: string) {
   const { error } = await supabase.auth.signInWithPassword(credential);
 
   if (error) {
-    throw new Error("Wrong credentials");
+    throw new Error(error.code);
   }
 }
 
@@ -32,7 +32,8 @@ export async function signup(email: string, password: string) {
 
   if (error) {
     console.log(error);
-    redirect("/error");
+
+    throw error;
   }
 }
 

@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
     data: { user },
   } = await supabase.auth.getUser();
   const title = user?.user_metadata.name
-    ? `${user.user_metadata.name} | Netflix`
+    ? `${user?.user_metadata?.name} | Netflix`
     : "Me | Netflix";
   const description = `${user?.user_metadata.name ?? "Me"} profile page`;
 

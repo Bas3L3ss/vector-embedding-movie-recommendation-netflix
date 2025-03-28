@@ -49,6 +49,7 @@ export default function SignIn() {
       toast("Welcome back!", {
         description: "You have successfully signed in.",
       });
+      router.push("/home");
     } catch (error) {
       console.error("Sign in error:", error);
       toast.error("Sign in failed", {

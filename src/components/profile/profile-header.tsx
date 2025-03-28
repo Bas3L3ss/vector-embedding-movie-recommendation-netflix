@@ -11,11 +11,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       <div className="flex items-center gap-4">
         <Avatar className="h-20 w-20 rounded-md">
           <AvatarImage
-            src={user?.user_metadata.picture ?? "/placeholder-user.jpg"}
+            src={user?.user_metadata?.picture ?? "/placeholder-user.jpg"}
             alt={user?.email || ""}
           />
           <AvatarFallback className="rounded-md bg-red-600 text-2xl">
-            {user?.user_metadata.name[0].toUpperCase() || "U"}
+            {user?.user_metadata.name?.[0].toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
 

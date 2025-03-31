@@ -12,7 +12,7 @@ const useToggleFavorite = (
   const [favorite, setFavorite] = useState(isFavorite);
   const handleToggleFavorite = async () => {
     if (!user) {
-      toast.error("Authentication required", {
+      toast.warning("Authentication required", {
         description: "Please sign in to add films to your list",
       });
       return;
@@ -21,11 +21,11 @@ const useToggleFavorite = (
     try {
       await toggleFavorites(user.id, film.id, favorite);
       if (favorite) {
-        toast("Removed from My List", {
+        toast.info("Removed from Your List", {
           description: `${film.title} has been removed from your list`,
         });
       } else {
-        toast("Added to My List", {
+        toast.success("Added to Your List", {
           description: `${film.title} has been added to your list`,
         });
       }

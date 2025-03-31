@@ -2,7 +2,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   Play,
-  Plus,
   ThumbsUp,
   Share2,
   Info,
@@ -29,6 +28,7 @@ import {
   getFilmById,
 } from "@/actions/films/server-only";
 import { Metadata } from "next";
+import ToggleFavoriteForFilm from "@/components/film/toggle-favorite-for-film";
 
 export async function generateMetadata({
   params,
@@ -84,8 +84,9 @@ export default async function FilmPage({
   params: Promise<{ id: string }>;
 }) {
   const id = (await params).id;
-  const film: Movie = await getFilmById(id);
+  const film: Movie | null = await getFilmById(id);
   const user = (await (await createClient()).auth.getUser()).data.user;
+
   let favorites;
   if (!film) {
     notFound();
@@ -93,6 +94,7 @@ export default async function FilmPage({
   if (user) {
     favorites = (await getFavorites(user.id)).map((m) => m.Movie);
   }
+  console.log(favorites);
 
   const genres = film.genre;
 
@@ -292,22 +294,11 @@ export default async function FilmPage({
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3 mb-6">
-              <Button
-                size="lg"
-                className="bg-white hover:bg-white/90 text-black font-semibold"
-              >
-                <Play className="mr-2 h-5 w-5 fill-black" />
-                Play
-              </Button>
-
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-gray-600 hover:bg-gray-800"
-              >
-                <Plus className="mr-2 h-5 w-5" />
-                My List
-              </Button>
+              <ToggleFavoriteForFilm
+                isFavorite={favorites?.some((f) => f.id == film.id)}
+                user={user}
+                film={film}
+              />
 
               <Button
                 size="icon"

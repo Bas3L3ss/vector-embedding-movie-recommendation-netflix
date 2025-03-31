@@ -24,7 +24,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { type Dispatch, type SetStateAction, useEffect } from "react";
-import { profileFormSchema } from "../../app/schema";
+import { profileFormSchema } from "../../schema";
 
 interface ProfileFormProps {
   user: User;

@@ -26,7 +26,7 @@ import {
 } from "../ui/card";
 import type { Dispatch, SetStateAction } from "react";
 import { signout } from "../../actions/auth";
-import { passwordFormSchema } from "../../app/schema";
+import { passwordFormSchema } from "../../schema";
 
 interface SecuritySettingsProps {
   user: User;

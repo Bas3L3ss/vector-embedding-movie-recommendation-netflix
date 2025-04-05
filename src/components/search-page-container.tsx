@@ -70,8 +70,8 @@ const SearchPageContainer = ({
 
       {films?.length > 0 ? (
         <div>
-          <article className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-white mb-6">
+          <article className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-0">
               {selectedGenres.length > 0
                 ? `${
                     selectedGenres.length === 1
@@ -83,7 +83,7 @@ const SearchPageContainer = ({
                 ? `Search Results for "${query}", ${films.length} films found`
                 : "All movies"}
             </h2>
-            <h3 className="text-base font-bold text-white mb-6 ">
+            <h3 className="text-sm md:text-base font-bold text-white">
               Page: {currentPage}
             </h3>
           </article>

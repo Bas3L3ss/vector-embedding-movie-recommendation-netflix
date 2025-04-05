@@ -18,6 +18,7 @@ import { Button } from "./ui/button";
 import type { User } from "@supabase/supabase-js";
 import useToggleFavorite from "@/hooks/use-toggle-favorite";
 import { Badge } from "./ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FilmCardProps {
   film: Film;
@@ -31,6 +32,7 @@ export default function FilmCardV2({
   user,
 }: FilmCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const isMobile = useIsMobile();
   const { favorite, handleToggleFavorite } = useToggleFavorite(
     user,
     film,
@@ -84,10 +86,10 @@ export default function FilmCardV2({
           )}
 
           {/* Gradient overlay - improved for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent md:opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Content overlay */}
-          {isHovered ? (
+          {isHovered || isMobile ? (
             <div className="absolute inset-0 flex flex-col justify-end p-3 text-white">
               <div className="flex flex-wrap gap-1 mb-1">
                 {displayGenres.map((genre, index) => (

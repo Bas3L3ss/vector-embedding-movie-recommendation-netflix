@@ -7,6 +7,7 @@ import useToggleFavorite from "@/hooks/use-toggle-favorite";
 import { User } from "@supabase/supabase-js";
 import { Movie } from "@prisma/client";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ToggleFavoriteForFilm = ({
   user,
@@ -22,11 +23,12 @@ const ToggleFavoriteForFilm = ({
     film,
     isFavorite
   );
+  const isMobile = useIsMobile();
   return (
     <>
       <Button
-        size="lg"
-        className="bg-white       hover:bg-white/90  text-black font-semibold"
+        size={isMobile ? "default" : "lg"}
+        className="bg-white  hover:bg-white/90  text-black font-semibold"
         onClick={() => {
           toast("Not supported yet");
         }}
@@ -35,7 +37,7 @@ const ToggleFavoriteForFilm = ({
         Play
       </Button>
       <Button
-        size="lg"
+        size={isMobile ? "default" : "lg"}
         variant="outline"
         onClick={handleToggleFavorite}
         className="border-gray-600  

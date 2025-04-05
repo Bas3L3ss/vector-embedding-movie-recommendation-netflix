@@ -94,16 +94,17 @@ export default async function FilmPage({
   if (user) {
     favorites = (await getFavorites(user.id)).map((m) => m.Movie);
   }
-  console.log(favorites);
 
   const genres = film.genre;
 
-  const similarFilms: Movie[] = await findSimilarMovies(
-    //@ts-expect-error: no problem
-    film.embedding,
-    0.75,
-    10
-  );
+  const similarFilms: Movie[] = (
+    await findSimilarMovies(
+      // @ts-expect-error: no problem
+      film.embedding,
+      0.75,
+      11
+    )
+  ).slice(1);
 
   // Format cast as an array if it's a string
   const castArray =
@@ -162,38 +163,42 @@ export default async function FilmPage({
   return (
     <section className="relative">
       {/* Hero Banner with Video Trailer Overlay */}
-      <div className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden">
+      <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh]  overflow-hidden">
         <Image
           src={film?.posterUrl?.[1] || "/placeholder.svg"}
           alt={film.title}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
+          sizes="100vw"
           priority
           className="object-cover object-center"
         />
 
-        {/* Enhanced gradient overlays for better text readability */}
+        {/* Enhanced gradient overlays with better mobile support */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-black to-transparent" />
 
         {/* Play button overlay with animation */}
         <div className="absolute inset-0 flex items-center justify-center">
           <Button
-            size="lg"
-            className="bg-white hover:bg-white/90 text-black font-semibold transition-transform hover:scale-105 shadow-lg"
+            size="sm"
+            className="bg-white hover:bg-white/90 text-black font-semibold transition-transform hover:scale-105 shadow-lg sm:text-base sm:px-4 md:size-lg"
           >
-            <Play className="mr-2 h-5 w-5 fill-black" />
+            <Play className="mr-1 h-4 w-4 sm:h-5 sm:w-5 fill-black" />
             Play
           </Button>
         </div>
 
-        {/* Film title overlay for mobile */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
-          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-md">
+        {/* Film title overlay for mobile with improved spacing */}
+      </div>
+
+      {/* Film Details Section with improved responsive layout */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 -mt-16 sm:-mt-24 md:-mt-32 relative z-10">
+        <div className="  block bottom-0 left-0 right-0  py-4 sm:p-6 md:hidden">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 drop-shadow-md line-clamp-2">
             {film.title}
           </h1>
-          <div className="flex items-center gap-2 text-sm text-gray-300">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-300">
             <span className="text-green-500 font-semibold">
               {matchPercentage}% Match
             </span>
@@ -203,61 +208,61 @@ export default async function FilmPage({
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Film Details Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Left Column - Poster and Quick Stats */}
           <div className="hidden md:block">
             <div className="aspect-[2/3] relative rounded-lg overflow-hidden shadow-2xl border border-gray-800">
               <Image
                 src={film?.posterUrl?.[0] || "/placeholder.svg"}
                 alt={film.title}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
                 fill
                 className="object-cover"
               />
             </div>
 
             {/* Quick Stats */}
-            <div className="mt-6 bg-gray-900/60 backdrop-blur-sm rounded-lg p-4 border border-gray-800">
-              <div className="flex items-center justify-between mb-3">
+            <div className="mt-4 lg:mt-6 bg-gray-900/60 backdrop-blur-sm rounded-lg p-3 lg:p-4 border border-gray-800">
+              <div className="flex items-center justify-between mb-2 lg:mb-3">
                 <div className="flex items-center">
-                  <Star className="h-5 w-5 text-yellow-500 mr-1 fill-yellow-500" />
+                  <Star className="h-4 w-4 lg:h-5 lg:w-5 text-yellow-500 mr-1 fill-yellow-500" />
                   <span className="text-white font-bold">
                     {film.rating?.toString()}/10
                   </span>
                 </div>
-                <span className="text-sm text-gray-400">IMDb</span>
+                <span className="text-xs lg:text-sm text-gray-400">IMDb</span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2 lg:space-y-3">
                 <div>
-                  <div className="flex justify-between text-sm mb-1">
+                  <div className="flex justify-between text-xs lg:text-sm mb-1">
                     <span className="text-gray-400">Critic Score</span>
                     <span className="text-white">{criticScore}%</span>
                   </div>
-                  <Progress value={criticScore} className="h-1.5" />
+                  <Progress value={criticScore} className="h-1 lg:h-1.5" />
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-sm mb-1">
+                  <div className="flex justify-between text-xs lg:text-sm mb-1">
                     <span className="text-gray-400">Audience Score</span>
                     <span className="text-white">{audienceScore}%</span>
                   </div>
-                  <Progress value={audienceScore} className="h-1.5" />
+                  <Progress value={audienceScore} className="h-1 lg:h-1.5" />
                 </div>
               </div>
 
               {awards.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-gray-800">
-                  <h4 className="text-gray-400 text-sm mb-2">Awards</h4>
-                  <div className="space-y-2">
+                <div className="mt-3 lg:mt-4 pt-3 lg:pt-4 border-t border-gray-800">
+                  <h4 className="text-gray-400 text-xs lg:text-sm mb-2">
+                    Awards
+                  </h4>
+                  <div className="space-y-1 lg:space-y-2">
                     {awards.map((award, index) => (
                       <div key={index} className="flex items-center">
-                        <Award className="h-4 w-4 text-yellow-500 mr-2" />
-                        <span className="text-sm text-white">{award}</span>
+                        <Award className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-500 mr-1 lg:mr-2" />
+                        <span className="text-xs lg:text-sm text-white">
+                          {award}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -266,15 +271,15 @@ export default async function FilmPage({
             </div>
           </div>
 
-          {/* Right Column - Details */}
+          {/* Right Column - Details with better spacing on different screen sizes */}
           <div className="md:col-span-2">
             {/* Title and basic info - hidden on mobile as it's shown in the hero */}
             <div className="hidden md:block">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 leading-tight">
+              <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-2 lg:mb-3 leading-tight">
                 {film.title}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-3 text-sm text-gray-300 mb-4">
+              <div className="flex flex-wrap items-center gap-2 lg:gap-3 text-xs lg:text-sm text-gray-300 mb-3 lg:mb-4">
                 <span className="text-green-500 font-semibold">
                   {matchPercentage}% Match
                 </span>
@@ -292,9 +297,10 @@ export default async function FilmPage({
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 mb-6">
+            {/* Action Buttons with improved mobile layout */}
+            <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
               <ToggleFavoriteForFilm
+                // @ts-expect-error: no prob
                 isFavorite={favorites?.some((f) => f.id == film.id)}
                 user={user}
                 film={film}
@@ -303,124 +309,138 @@ export default async function FilmPage({
               <Button
                 size="icon"
                 variant="outline"
-                className="rounded-full border-gray-600 hover:bg-gray-800 h-10 w-10"
+                className="rounded-full border-gray-600 hover:bg-gray-800 h-8 w-8 sm:h-10 sm:w-10"
               >
-                <ThumbsUp className="h-5 w-5" />
+                <ThumbsUp className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
 
               <Button
                 size="icon"
                 variant="outline"
-                className="rounded-full border-gray-600 hover:bg-gray-800 h-10 w-10"
+                className="rounded-full border-gray-600 hover:bg-gray-800 h-8 w-8 sm:h-10 sm:w-10"
               >
-                <Share2 className="h-5 w-5" />
+                <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </div>
 
-            {/* Film metadata with icons */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            {/* Film metadata with icons - improved grid for small screens */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6">
               <div className="flex items-center">
-                <Calendar className="h-4 w-4 text-gray-400 mr-2" />
-                <span className="text-sm text-gray-300">
+                <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-1 sm:mr-2" />
+                <span className="text-xs sm:text-sm text-gray-300">
                   {new Date(film.createdAt).getFullYear()}
                 </span>
               </div>
               <div className="flex items-center">
-                <Clock className="h-4 w-4 text-gray-400 mr-2" />
-                <span className="text-sm text-gray-300">
+                <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-1 sm:mr-2" />
+                <span className="text-xs sm:text-sm text-gray-300">
                   {film.duration} minutes
                 </span>
               </div>
               <div className="flex items-center">
-                <Globe className="h-4 w-4 text-gray-400 mr-2" />
-                <span className="text-sm text-gray-300">
+                <Globe className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-1 sm:mr-2" />
+                <span className="text-xs sm:text-sm text-gray-300">
                   {film.language?.[0] || "English"}
                 </span>
               </div>
               <div className="flex items-center">
-                <Info className="h-4 w-4 text-gray-400 mr-2" />
-                <span className="text-sm text-gray-300">{contentRating}</span>
+                <Info className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-1 sm:mr-2" />
+                <span className="text-xs sm:text-sm text-gray-300">
+                  {contentRating}
+                </span>
               </div>
             </div>
 
-            {/* Genres */}
-            <div className="flex flex-wrap gap-2 mb-6">
+            {/* Genres with better wrapping on small screens */}
+            <div className="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-6">
               {genres.map((genre) => (
                 <Badge
                   key={genre}
                   variant="outline"
-                  className="bg-gray-800/50 hover:bg-gray-700 text-white border-gray-700 px-3 py-1"
+                  className="bg-gray-800/50 hover:bg-gray-700 text-white border-gray-700 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm"
                 >
                   {genre}
                 </Badge>
               ))}
             </div>
 
-            {/* Description */}
-            <p className="text-white text-lg leading-relaxed mb-6">
+            {/* Description with adaptive text size */}
+            <p className="text-white text-base sm:text-lg leading-relaxed mb-4 sm:mb-6">
               {film.description}
             </p>
 
             {/* Tabs for different content sections */}
-            <Tabs defaultValue="details" className="mt-8">
-              <TabsList className="bg-gray-900/60 border border-gray-800">
-                <TabsTrigger value="details">Details</TabsTrigger>
-                <TabsTrigger value="cast">Cast & Crew</TabsTrigger>
-                <TabsTrigger value="reviews">Reviews</TabsTrigger>
-                <TabsTrigger value="trailers">Trailers</TabsTrigger>
+            <Tabs defaultValue="details" className="mt-6 sm:mt-8">
+              <TabsList className="bg-gray-900/60 border border-gray-800 w-full overflow-x-auto">
+                <TabsTrigger value="details" className="text-xs sm:text-sm">
+                  Details
+                </TabsTrigger>
+                <TabsTrigger value="cast" className="text-xs sm:text-sm">
+                  Cast & Crew
+                </TabsTrigger>
+                <TabsTrigger value="reviews" className="text-xs sm:text-sm">
+                  Reviews
+                </TabsTrigger>
+                <TabsTrigger value="trailers" className="text-xs sm:text-sm">
+                  Trailers
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="details" className="mt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <h3 className="text-gray-400 font-semibold mb-2">
+                    <h3 className="text-gray-400 text-sm font-semibold mb-1 sm:mb-2">
                       Director
                     </h3>
-                    <p className="text-white">{film.director}</p>
+                    <p className="text-white text-sm sm:text-base">
+                      {film.director}
+                    </p>
                   </div>
 
                   <div>
-                    <h3 className="text-gray-400 font-semibold mb-2">
+                    <h3 className="text-gray-400 text-sm font-semibold mb-1 sm:mb-2">
                       Country
                     </h3>
-                    <p className="text-white">
+                    <p className="text-white text-sm sm:text-base">
                       {film.country || "United States"}
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-gray-400 font-semibold mb-2">
+                    <h3 className="text-gray-400 text-sm font-semibold mb-1 sm:mb-2">
                       Language
                     </h3>
-                    <p className="text-white">
+                    <p className="text-white text-sm sm:text-base">
                       {film.language?.join(", ") || "English"}
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-gray-400 font-semibold mb-2">
+                    <h3 className="text-gray-400 text-sm font-semibold mb-1 sm:mb-2">
                       Release
                     </h3>
-                    <p className="text-white">{film.releaseYear}</p>
+                    <p className="text-white text-sm sm:text-base">
+                      {film.releaseYear}
+                    </p>
                   </div>
                 </div>
               </TabsContent>
 
               <TabsContent value="cast" className="mt-4">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
                   {/* @ts-expect-error: no problem */}
                   {castArray.slice(0, 8).map((actor, index) => (
                     <div
                       key={index}
-                      className="bg-gray-900/60 backdrop-blur-sm rounded-lg p-3 border border-gray-800"
+                      className="bg-gray-900/60 backdrop-blur-sm rounded-lg p-2 sm:p-3 border border-gray-800"
                     >
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12 border border-gray-700">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border border-gray-700">
                           <AvatarImage
                             src={`/placeholder.svg?height=48&width=48`}
                             alt={actor}
                           />
-                          <AvatarFallback className="bg-gray-800 text-gray-400">
+                          <AvatarFallback className="bg-gray-800 text-gray-400 text-xs sm:text-sm">
                             {actor
                               .split(" ")
                               .map((n: string) => n[0])
@@ -428,25 +448,29 @@ export default async function FilmPage({
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-white font-medium">{actor}</p>
-                          <p className="text-gray-400 text-sm">Actor</p>
+                          <p className="text-white font-medium text-sm sm:text-base">
+                            {actor}
+                          </p>
+                          <p className="text-gray-400 text-xs sm:text-sm">
+                            Actor
+                          </p>
                         </div>
                       </div>
                     </div>
                   ))}
 
                   <div className="col-span-full mt-2">
-                    <h3 className="text-gray-400 font-semibold mb-2">
+                    <h3 className="text-gray-400 text-sm font-semibold mb-1 sm:mb-2">
                       Director
                     </h3>
-                    <div className="bg-gray-900/60 backdrop-blur-sm rounded-lg p-3 border border-gray-800 inline-block">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12 border border-gray-700">
+                    <div className="bg-gray-900/60 backdrop-blur-sm rounded-lg p-2 sm:p-3 border border-gray-800 inline-block">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border border-gray-700">
                           <AvatarImage
                             src={`/placeholder.svg?height=48&width=48`}
                             alt={film.director ?? `director of ${film.title}`}
                           />
-                          <AvatarFallback className="bg-gray-800 text-gray-400">
+                          <AvatarFallback className="bg-gray-800 text-gray-400 text-xs sm:text-sm">
                             {film.director
                               ?.split(" ")
                               .map((n) => n[0])
@@ -454,10 +478,12 @@ export default async function FilmPage({
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-white font-medium">
+                          <p className="text-white font-medium text-sm sm:text-base">
                             {film.director}
                           </p>
-                          <p className="text-gray-400 text-sm">Director</p>
+                          <p className="text-gray-400 text-xs sm:text-sm">
+                            Director
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -466,31 +492,31 @@ export default async function FilmPage({
               </TabsContent>
 
               <TabsContent value="reviews" className="mt-4">
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {reviews.map((review, index) => (
                     <div
                       key={index}
-                      className="bg-gray-900/60 backdrop-blur-sm rounded-lg p-4 border border-gray-800"
+                      className="bg-gray-900/60 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-gray-800"
                     >
-                      <div className="flex items-center gap-3 mb-3">
-                        <Avatar>
+                      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                        <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                           <AvatarImage
                             src={review.avatar}
                             alt={review.author}
                           />
-                          <AvatarFallback className="bg-gray-800 text-gray-400">
+                          <AvatarFallback className="bg-gray-800 text-gray-400 text-xs sm:text-sm">
                             {review.author[0]}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-white font-medium">
+                          <p className="text-white font-medium text-sm sm:text-base">
                             {review.author}
                           </p>
                           <div className="flex items-center">
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${
+                                className={`h-3 w-3 sm:h-4 sm:w-4 ${
                                   i < Math.floor(review.rating)
                                     ? "text-yellow-500 fill-yellow-500"
                                     : i < review.rating
@@ -502,15 +528,17 @@ export default async function FilmPage({
                           </div>
                         </div>
                       </div>
-                      <p className="text-gray-300">{review.text}</p>
+                      <p className="text-gray-300 text-sm sm:text-base">
+                        {review.text}
+                      </p>
                     </div>
                   ))}
 
                   <Button
                     variant="outline"
-                    className="w-full border-gray-700 hover:bg-gray-800 mt-2"
+                    className="w-full border-gray-700 hover:bg-gray-800 mt-2 text-xs sm:text-sm"
                   >
-                    <MessageCircle className="mr-2 h-4 w-4" />
+                    <MessageCircle className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                     See All Reviews
                   </Button>
                 </div>
@@ -530,8 +558,10 @@ export default async function FilmPage({
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="text-center">
-                        <Play className="h-12 w-12 text-gray-500 mx-auto mb-2" />
-                        <p className="text-gray-400">Trailer not available</p>
+                        <Play className="h-8 w-8 sm:h-12 sm:w-12 text-gray-500 mx-auto mb-1 sm:mb-2" />
+                        <p className="text-gray-400 text-sm sm:text-base">
+                          Trailer not available
+                        </p>
                       </div>
                     </div>
                   )}
@@ -543,12 +573,12 @@ export default async function FilmPage({
       </div>
 
       {/* Similar Films Section */}
-      <div className="mt-16 pb-16 bg-gradient-to-b from-transparent to-gray-950">
+      <div className="mt-12 sm:mt-16 pb-12 sm:pb-16 bg-gradient-to-b from-transparent to-gray-950">
         {similarFilms.length > 0 && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center">
               More Like This
-              <span className="ml-2 text-sm font-normal text-gray-400">
+              <span className="text-xs sm:text-sm font-normal text-gray-400 sm:ml-2 mt-1 sm:mt-0">
                 Because you watched {film.title}
               </span>
             </h2>

@@ -8,6 +8,7 @@ import { Movie as Film } from "@prisma/client";
 import { Button } from "./ui/button";
 import { User } from "@supabase/supabase-js";
 import useToggleFavorite from "@/hooks/use-toggle-favorite";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FilmCardProps {
   film: Film;
@@ -21,6 +22,7 @@ export default function FilmCard({
   user,
 }: FilmCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const isMobile = useIsMobile();
   const { favorite, handleToggleFavorite } = useToggleFavorite(
     user,
     film,
@@ -46,10 +48,11 @@ export default function FilmCard({
           />
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent  md:opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Content overlay */}
-          {isHovered && (
+
+          {isHovered || isMobile ? (
             <div className="absolute inset-0 flex flex-col justify-end p-3 text-white">
               <h3 className="font-bold truncate">{film.title}</h3>
               <div className="flex items-center space-x-2 mt-2">
@@ -92,7 +95,7 @@ export default function FilmCard({
                 <span>{film.duration} min</span>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </Link>

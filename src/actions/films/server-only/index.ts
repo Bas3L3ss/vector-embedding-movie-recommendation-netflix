@@ -67,7 +67,6 @@ export async function findSimilarMovies(
     query_embedding: queryVector,
     similarity_threshold: 0.3,
   });
-  // console.log(result);
 
   if (!result.data) {
     return [];
@@ -82,7 +81,6 @@ export async function searchFilmsByText(query: string) {
   }
   try {
     const vector = await generateCachedEmbedding(query);
-    // console.log(JSON.stringify(vector));
 
     if (vector.length > 0) {
       return await findSimilarMovies(vector, 0.75, 40);

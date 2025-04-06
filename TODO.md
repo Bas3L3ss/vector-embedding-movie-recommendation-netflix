@@ -1,6 +1,3 @@
 <!-- Optional -->
 
-5/ todos
-6/ implement account login saved like in messenger and signout all of devices (do your own research)
-7/ implement account forget password, change user name, conditionally render profile setting
-8/ advanced recomendation (super optional)
+5/ finish remove,edit (reset embedding vector),add (create embedding vector) movies

@@ -47,14 +47,21 @@ export default function SecuritySettings({
       confirmPassword: "",
     },
   });
-  // TODOS: make sure to check currentPassowrd
   const onPasswordSubmit = async (
     values: z.infer<typeof passwordFormSchema>
   ) => {
     setIsLoading(true);
     try {
       const supabaseClient = supabase();
+      const { data: signInData, error: signInError } =
+        await supabaseClient.auth.signInWithPassword({
+          email: user.email ?? "noemail",
+          password: values.currentPassword,
+        });
 
+      if (signInError || !signInData.session) {
+        throw new Error("Current password is incorrect.");
+      }
       const { error } = await supabaseClient.auth.updateUser({
         password: values.newPassword,
       });
@@ -66,9 +73,9 @@ export default function SecuritySettings({
         description: "Your password has been updated successfully.",
       });
     } catch (error) {
-      console.error("Error updating password:", error);
+      console.error(error);
       toast.error("Update failed", {
-        description: "There was an error updating your password.",
+        description: String(error),
       });
     } finally {
       setIsLoading(false);
@@ -82,98 +89,101 @@ export default function SecuritySettings({
       console.error("Error signing out:", error);
     }
   };
+  console.log(user);
 
   return (
     <>
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="text-white">Change Password</CardTitle>
-          <CardDescription className="text-gray-400">
-            Update your password to keep your account secure.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...passwordForm}>
-            <form
-              onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
-              className="space-y-6"
-            >
-              <FormField
-                control={passwordForm.control}
-                name="currentPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-300">
-                      Current Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your current password"
-                        className="bg-gray-800 border-gray-700 text-white"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={passwordForm.control}
-                disabled={isLoading}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-300">
-                      New Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your new password"
-                        className="bg-gray-800 border-gray-700 text-white"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={passwordForm.control}
-                disabled={isLoading}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-300">
-                      Confirm New Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirm your new password"
-                        className="bg-gray-800 border-gray-700 text-white"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white"
-                disabled={isLoading}
+      {user.app_metadata.provider !== "google" ? (
+        <Card className="bg-gray-900 border-gray-800">
+          <CardHeader>
+            <CardTitle className="text-white">Change Password</CardTitle>
+            <CardDescription className="text-gray-400">
+              Update your password to keep your account secure.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...passwordForm}>
+              <form
+                onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
+                className="space-y-6"
               >
-                {isLoading ? "Updating..." : "Update Password"}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+                <FormField
+                  control={passwordForm.control}
+                  name="currentPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">
+                        Current Password
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Enter your current password"
+                          className="bg-gray-800 border-gray-700 text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={passwordForm.control}
+                  disabled={isLoading}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">
+                        New Password
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Enter your new password"
+                          className="bg-gray-800 border-gray-700 text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={passwordForm.control}
+                  disabled={isLoading}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">
+                        Confirm New Password
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Confirm your new password"
+                          className="bg-gray-800 border-gray-700 text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Updating..." : "Update Password"}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      ) : null}
 
       <Card className="bg-gray-900 border-gray-800 mt-6">
         <CardHeader>

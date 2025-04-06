@@ -11,4 +11,5 @@ const navItems = (user: User | null) =>
         { name: "Home", path: "/" },
         { name: "Login", path: "/auth/signin" },
       ];
+
 export { navItems };

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "../../lib/supabase/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function login(email: string, password: string) {
   const supabase = await createClient();
@@ -66,3 +66,8 @@ export async function signInWithGoogle() {
 
   redirect(data.url);
 }
+export const checkAdminUser = async () => {
+  const supabase = await createClient();
+  const userId = (await supabase.auth.getUser()).data.user?.id;
+  if (!userId || userId !== process.env.ADMIN_ID) return notFound();
+};

@@ -10,3 +10,24 @@ export function extractYouTubeId(url: string) {
   );
   return match ? match[1] : "";
 }
+export const debounce = (func: () => void, delay: number) => {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: any[]) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+export function enumToOptions<T extends object>(
+  enumObj: T
+): { label: string; value: keyof T }[] {
+  return Object.keys(enumObj)
+    .filter((key) => isNaN(Number(key))) // filter out reverse mapping if it's a numeric enum
+    .map((key) => ({
+      label: key,
+      value: key,
+    }));
+}

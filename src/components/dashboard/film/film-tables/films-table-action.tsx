@@ -64,12 +64,11 @@ export default function FilmTableAction({
         options={GENRE_OPTIONS}
         // @ts-expect-error: no prob
         setFilterValue={setgenresFilter}
+        resetFilters={resetFilters}
+        isAnyFilterActive={isAnyFilterActive}
         filterValue={genresFilter}
       />
-      <DataTableResetFilter
-        isFilterActive={isAnyFilterActive}
-        onReset={resetFilters}
-      />
+
       <DataTableAddFilm />
       {selectedFilmIds?.length > 0 && (
         <AlertDialog open={open} onOpenChange={setOpen}>

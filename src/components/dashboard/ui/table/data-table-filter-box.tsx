@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn, debounce } from "@/lib/utils";
 import { CheckIcon, CirclePlusIcon, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { DataTableResetFilter } from "./data-table-reset-filter";
 
 interface FilterOption {
   value: string;
@@ -28,6 +29,8 @@ interface FilterOption {
 }
 
 interface FilterBoxProps {
+  resetFilters: () => void;
+  isAnyFilterActive: boolean;
   filterKey: string;
   title: string;
   options: FilterOption[];
@@ -43,7 +46,9 @@ export function DataTableFilterBox({
   title,
   options,
   setFilterValue,
+  isAnyFilterActive,
   filterValue,
+  resetFilters,
 }: FilterBoxProps) {
   const [isPending, startTransition] = React.useTransition();
   const selectedValuesSet = React.useMemo(() => {
@@ -86,103 +91,106 @@ export function DataTableFilterBox({
 
   const resetFilter = () => {
     setSelectedOptions(new Set());
-    startTransition(() => {
-      setFilterValue(null, filterKey);
-    });
   };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="default" className="border-dashed">
-          {isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <CirclePlusIcon className="mr-2 h-4 w-4" />
-          )}
-          {title}
-          {selectedOptions.size > 0 && (
-            <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
-              >
-                {selectedOptions.size}
-              </Badge>
-              <div className="hidden space-x-1 lg:flex">
-                {selectedOptions.size > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
-                    {selectedOptions.size} selected
-                  </Badge>
-                ) : (
-                  Array.from(selectedOptions).map((value) => (
-                    <Badge
-                      variant="secondary"
-                      key={value}
-                      className="rounded-sm px-1 font-normal"
-                    >
-                      {options.find((option) => option.value === value)
-                        ?.label || value}
-                    </Badge>
-                  ))
-                )}
-              </div>
-            </>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className={cn("w-[200px] p-0 ")} align="start">
-        <Command className="text-white bg-[#141414]">
-          <CommandInput placeholder={title} />
-          <CommandList>
-            <CommandEmpty>No options found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  className="text-white hover:bg-red-400! hover:text-white! hover:cursor-pointer"
-                  key={option.value}
-                  onSelect={() => handleSelect(option.value)}
-                >
-                  <div
-                    className={cn(
-                      "mr-2 flex h-4 w-4 items-center justify-center border-red-900 rounded-sm border border-primary",
-                      selectedOptions.has(option.value)
-                        ? "bg-primary text-primary-foreground"
-                        : "opacity-50 [&_svg]:invisible"
-                    )}
-                  >
-                    <CheckIcon className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  {option.icon && (
-                    <option.icon
-                      className="mr-2 h-4 w-4 text-muted-foreground"
-                      aria-hidden="true"
-                    />
-                  )}
-                  <span>{option.label}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+    <>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="default" className="border-dashed">
+            {isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <CirclePlusIcon className="mr-2 h-4 w-4" />
+            )}
+            {title}
             {selectedOptions.size > 0 && (
               <>
-                <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem
-                    className="text-white hover:bg-red-400! hover:text-white! hover:cursor-pointer justify-center text-center"
-                    onSelect={resetFilter}
-                  >
-                    Clear filters
-                  </CommandItem>
-                </CommandGroup>
+                <Separator orientation="vertical" className="mx-2 h-4" />
+                <Badge
+                  variant="secondary"
+                  className="rounded-sm px-1 font-normal lg:hidden"
+                >
+                  {selectedOptions.size}
+                </Badge>
+                <div className="hidden space-x-1 lg:flex">
+                  {selectedOptions.size > 2 ? (
+                    <Badge
+                      variant="secondary"
+                      className="rounded-sm px-1 font-normal"
+                    >
+                      {selectedOptions.size} selected
+                    </Badge>
+                  ) : (
+                    Array.from(selectedOptions).map((value) => (
+                      <Badge
+                        variant="secondary"
+                        key={value}
+                        className="rounded-sm px-1 font-normal"
+                      >
+                        {options.find((option) => option.value === value)
+                          ?.label || value}
+                      </Badge>
+                    ))
+                  )}
+                </div>
               </>
             )}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className={cn("w-[200px] p-0 ")} align="start">
+          <Command className="text-white bg-[#141414]">
+            <CommandInput placeholder={title} />
+            <CommandList>
+              <CommandEmpty>No options found.</CommandEmpty>
+              <CommandGroup>
+                {options.map((option) => (
+                  <CommandItem
+                    className="text-white hover:bg-red-400! hover:text-white! hover:cursor-pointer"
+                    key={option.value}
+                    onSelect={() => handleSelect(option.value)}
+                  >
+                    <div
+                      className={cn(
+                        "mr-2 flex h-4 w-4 items-center justify-center border-red-900 rounded-sm border border-primary",
+                        selectedOptions.has(option.value)
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className="h-4 w-4" aria-hidden="true" />
+                    </div>
+                    {option.icon && (
+                      <option.icon
+                        className="mr-2 h-4 w-4 text-muted-foreground"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span>{option.label}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              {selectedOptions.size > 0 && (
+                <>
+                  <CommandSeparator />
+                  <CommandGroup>
+                    <CommandItem
+                      className="text-white hover:bg-red-400! hover:text-white! hover:cursor-pointer justify-center text-center"
+                      onSelect={resetFilter}
+                    >
+                      Clear filters
+                    </CommandItem>
+                  </CommandGroup>
+                </>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      <DataTableResetFilter
+        isFilterActive={isAnyFilterActive}
+        onReset={resetFilter}
+      />
+    </>
   );
 }

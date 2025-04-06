@@ -8,7 +8,10 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   await checkAdminUser();
 
   const movieId = (await params).id;
-  const film = await getFilmById(movieId);
+  let film = null;
+  if (movieId !== "new") {
+    film = await getFilmById(movieId);
+  }
 
   if (!film && movieId !== "new") {
     return (
@@ -29,6 +32,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         <h1 className="text-2xl font-bold text-red-600">
           {movieId === "new" ? "Create New Film" : `Manage film ${movieId}`}
         </h1>
+        {/* @ts-expect-error: no prob */}
         <FilmForm initialData={movieId === "new" ? null : film} />
       </header>
     </section>

@@ -30,7 +30,7 @@ export const passwordFormSchema = z
 
 export const filmFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(255),
-  description: z.string().optional(),
+  description: z.string().min(5).max(1000),
   releaseYear: z.preprocess(
     (val) => {
       if (typeof val === "string" || typeof val === "number") {
@@ -52,8 +52,11 @@ export const filmFormSchema = z.object({
     // @ts-expect-error: no prob
     .array(z.enum(Object.entries(Genre).map((g) => g[0])))
     .min(1, "Select at least one genre"),
-  director: z.string().max(255).optional(),
-  cast: z.preprocess(splitCommaSeparatedString, z.array(z.string())).optional(),
+  director: z.string().max(255).min(1, "Include director name"),
+  cast: z.preprocess(
+    splitCommaSeparatedString,
+    z.array(z.string()).min(1, "Select at least one cast")
+  ),
   duration: z.preprocess((val) => {
     if (typeof val === "string" || typeof val === "number") {
       const parsed = parseInt(val.toString(), 10);
@@ -64,17 +67,17 @@ export const filmFormSchema = z.object({
 
   language: z.preprocess(
     splitCommaSeparatedString,
-    z.array(z.string().max(50).min(1, "Select at least one language"))
+    z.array(z.string().max(50)).min(1, "Select at least one language")
   ),
 
   country: z.string().max(100).optional(),
   rating: z.preprocess((val) => {
     if (typeof val === "string" || typeof val === "number") {
-      const parsed = parseInt(val.toString(), 10);
+      const parsed = parseFloat(val.toString());
       return isNaN(parsed) ? undefined : parsed;
     }
     return undefined;
-  }, z.number().min(0, "Minimum rating is 0.0").max(10, "Maximum rating is 10.0").optional()),
+  }, z.number().min(0, "Minimum rating is 0.0").max(10, "Maximum rating is 10.0")),
   featured: z.boolean(),
   posterUrl: z
     .array(z.union([z.string().url(), z.instanceof(File)]))
@@ -89,7 +92,9 @@ export const filmFormSchema = z.object({
   trailerUrl: z
     .preprocess(
       splitCommaSeparatedString,
-      z.array(z.string().url("Invalid trailer URL"))
+      z
+        .array(z.string().url("Invalid trailer URL"))
+        .min(1, "Have atleast one trailer url")
     )
     .optional(),
   videoUrl: z.preprocess(

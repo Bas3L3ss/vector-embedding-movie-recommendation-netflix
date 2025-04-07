@@ -11,6 +11,7 @@ export const createFilm = async (
   let uploadedUrls: string[] = [];
   let createdFilm: any = null;
   const posterFiles = data.posterUrl;
+
   try {
     const supabase = await createClient();
 
@@ -42,11 +43,10 @@ export const createFilm = async (
 
     createdFilm = film;
     const filmId = film.id.toString();
-    console.log(filmId, createdFilm);
 
     // 2. Upload poster images using the actual film ID
     uploadedUrls = await createFiles(
-      posterFiles?.map((f) => f as File) || [],
+      posterFiles?.filter((file) => typeof file === "object") || [],
       "posters",
       filmId
     );
@@ -94,10 +94,8 @@ export const createFilm = async (
   } catch (error) {
     const supabase = await createClient();
 
-    console.log(createdFilm, createdFilm.title, "hii?");
-
-    if (createdFilm && createdFilm.title) {
-      await supabase.from("Movie").delete().eq("title", createdFilm.title);
+    if (createdFilm && createdFilm.id) {
+      await supabase.from("Movie").delete().eq("id", createdFilm.id);
     }
 
     // If any unexpected error occurs, perform cleanup
@@ -116,22 +114,21 @@ export const createFilm = async (
 
 export const updateFilm = async (
   initialData: Movie,
-  newData: FilmFormData,
-  newPosterFiles: File[] = []
+  newData: FilmFormData
 ): Promise<{ success: boolean; film?: any; error?: string }> => {
   let newUploadedUrls: string[] = [];
 
   const supabase = await createClient();
   try {
     const filmId = initialData.id;
-
+    const newPosterFiles = newData.posterUrl;
     // Find poster URLs to delete (those in initial data but not in kept URLs)
     const urlsToDelete = (initialData.posterUrl || []).filter(
       (url) => !initialData.posterUrl.includes(url)
     );
 
     // Upload new poster files if any
-    if (newPosterFiles.length > 0) {
+    if (newPosterFiles && newPosterFiles.length > 0) {
       newUploadedUrls = await createFiles(
         newPosterFiles,
         "posters",

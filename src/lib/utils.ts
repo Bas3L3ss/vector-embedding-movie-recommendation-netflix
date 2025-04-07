@@ -1,3 +1,4 @@
+import { FormValues } from "@/hooks/use-film-form";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -40,3 +41,32 @@ export const splitCommaSeparatedString = (val: unknown) => {
   }
   return val;
 };
+export function appendFilmDataToFormData(formData: FormData, data: FormValues) {
+  formData.append("title", data.title);
+  formData.append("description", data.description);
+  formData.append("releaseYear", String(data.releaseYear));
+  formData.append("duration", String(data.duration));
+  formData.append("director", data.director);
+  formData.append("featured", String(data.featured));
+  formData.append("genre", JSON.stringify(data.genre));
+  formData.append("cast", JSON.stringify(data.cast));
+  formData.append("country", JSON.stringify(data.country));
+  formData.append("rating", JSON.stringify(data.rating));
+  formData.append("trailerUrl", JSON.stringify(data.trailerUrl));
+  formData.append("language", JSON.stringify(data.language));
+  formData.append("videoUrl", JSON.stringify(data.videoUrl));
+
+  // Append image files and their URLs
+  const posterUrls: string[] = [];
+  data.posterUrl.forEach((file: File | string) => {
+    if (file instanceof File) {
+      formData.append("files", file); // 👈 matches `formidable`'s fieldname
+    } else if (typeof file === "string") {
+      posterUrls.push(file); // Collect URL strings in an array
+    }
+  });
+  if (posterUrls.length > 0) {
+    formData.append("posterUrl", JSON.stringify(posterUrls)); // Append the array of URLs as JSON
+  }
+  return formData;
+}

@@ -42,14 +42,26 @@ export default function FilmTableAction({
     setIsDeletingFilms(true);
     setOpen(false);
     try {
-      setSelectedFilmIds([]);
+      const response = await fetch("/api/films", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ selectedFilmIds }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete films");
+      }
+
+      const result = await response.json();
+      console.log("Delete response:", result);
     } catch (error) {
       console.error("Failed to delete products:", error);
     } finally {
       setIsDeletingFilms(false);
     }
   };
-
   return (
     <div className="flex flex-wrap items-center gap-4 mt-5">
       <DataTableSearch

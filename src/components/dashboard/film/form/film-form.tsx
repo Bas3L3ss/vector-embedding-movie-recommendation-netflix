@@ -266,7 +266,7 @@ export default function FilmForm({
                   .map((image: string | File, index: number) => {
                     if (image instanceof File) return null;
                     return (
-                      <div key={index} className="flex gap-3">
+                      <div key={`${image}${index}`} className="flex gap-3">
                         <FormField
                           control={form.control}
                           name={`posterUrl.${index}`}

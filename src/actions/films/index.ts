@@ -161,6 +161,18 @@ export const fetchMovies = async ({
       orderBy: {
         createdAt: "desc",
       },
+      select: {
+        id: true,
+        posterUrl: true,
+        title: true,
+        genre: true,
+        releaseYear: true,
+        rating: true,
+        duration: true,
+        description: true,
+        trailerUrl: true,
+        featured: true,
+      },
     }),
   ]);
   const plainData = data.map((movie) => ({

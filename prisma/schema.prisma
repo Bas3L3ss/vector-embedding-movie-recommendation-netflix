@@ -31,7 +31,7 @@ model Movie {
   videoUrl        String[]    @db.VarChar(255) // Movie source link
   embedding       Unsupported("vector(1024)") 
   createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  updatedAt       DateTime   @updatedAt 
   tags            String[] @default([])
 
   favorites Favorite[]

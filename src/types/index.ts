@@ -41,6 +41,7 @@ type FilmFormData = {
   featured: boolean;
   tags: string[];
   trailerUrl?: string[];
+  posterUrl?: (string | File)[];
   videoUrl?: string[];
 };
 

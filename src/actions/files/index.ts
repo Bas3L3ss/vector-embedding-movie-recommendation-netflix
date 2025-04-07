@@ -16,7 +16,7 @@ export const createFiles = async (
       const filePath = `${folderName}/${fileName}`;
 
       const { error } = await supabase.storage
-        .from("films-assets")
+        .from("posters")
         .upload(filePath, file, {
           cacheControl: "3600",
           upsert: true,
@@ -28,7 +28,7 @@ export const createFiles = async (
       }
 
       const { data: urlData } = supabase.storage
-        .from("films-assets")
+        .from("posters")
         .getPublicUrl(filePath);
 
       return urlData.publicUrl;
@@ -49,7 +49,7 @@ export const deleteFiles = async (urls: string[]): Promise<boolean> => {
 
   for (const url of urls) {
     try {
-      const pathMatch = url.match(/\/films-assets\/(.+)$/);
+      const pathMatch = url.match(/\/posters\/(.+)$/);
 
       if (!pathMatch || !pathMatch[1]) {
         console.error("Could not extract path from URL:", url);
@@ -59,9 +59,7 @@ export const deleteFiles = async (urls: string[]): Promise<boolean> => {
 
       const path = pathMatch[1];
 
-      const { error } = await supabase.storage
-        .from("films-assets")
-        .remove([path]);
+      const { error } = await supabase.storage.from("posters").remove([path]);
 
       if (error) {
         console.error("Error deleting file:", error);

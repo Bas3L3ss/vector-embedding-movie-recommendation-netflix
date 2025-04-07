@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { DataTableFilterBox } from "../../ui/table/data-table-filter-box";
-import { DataTableResetFilter } from "../../ui/table/data-table-reset-filter";
 import { DataTableSearch } from "../../ui/table/data-table-search";
 import { GENRE_OPTIONS, useFilmTableFilters } from "./use-films-table-filters";
 import {

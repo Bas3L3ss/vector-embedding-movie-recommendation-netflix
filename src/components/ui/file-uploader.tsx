@@ -1,6 +1,6 @@
 "use client";
 
-import { CrossIcon, UploadIcon } from "lucide-react";
+import { CrossIcon, DeleteIcon, UploadIcon } from "lucide-react";
 import * as React from "react";
 import Dropzone, {
   type DropzoneProps,
@@ -13,6 +13,8 @@ import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useControllableState } from "@/hooks/use-controllable-state";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 
 function formatBytes(
   bytes: number,
@@ -263,7 +265,7 @@ export function FileUploader(props: FileUploaderProps) {
       </Dropzone>
       {files?.length ? (
         <ScrollArea className="h-fit w-full px-3">
-          <div className="max-h-48 space-y-4">
+          <div className="space-y-4">
             {files?.map((file, index) => (
               <FileCard
                 key={index}
@@ -290,7 +292,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
     <div className="relative flex items-center space-x-4">
       <div className="flex flex-1 space-x-4">
         {isFileWithPreview(file) ? (
-          <img
+          <Image
             src={file.preview}
             alt={file.name}
             width={48}
@@ -299,9 +301,9 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
             className="aspect-square shrink-0 rounded-md object-cover"
           />
         ) : null}
-        <div className="flex w-full flex-col gap-2">
+        <div className="flex w-full flex-col gap-2 ">
           <div className="space-y-px">
-            <p className="text-foreground/80 line-clamp-1 text-sm font-medium">
+            <p className="line-clamp-1 text-sm font-medium text-white">
               {file.name}
             </p>
             <p className="text-muted-foreground text-xs">
@@ -319,7 +321,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
           className="size-7"
           onClick={onRemove}
         >
-          <CrossIcon className="size-4" aria-hidden="true" />
+          <CrossCircledIcon className="size-4 text-black" aria-hidden="true" />
           <span className="sr-only">Remove file</span>
         </Button>
       </div>

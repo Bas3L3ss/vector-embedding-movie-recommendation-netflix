@@ -1,3 +1,4 @@
+import { splitCommaSeparatedString } from "@/lib/utils";
 import { Genre } from "@prisma/client";
 import { z } from "zod";
 
@@ -52,15 +53,28 @@ export const filmFormSchema = z.object({
     .array(z.enum(Object.entries(Genre).map((g) => g[0])))
     .min(1, "Select at least one genre"),
   director: z.string().max(255).optional(),
-  cast: z.array(z.string()).optional(),
-  duration: z.number().int().positive("Duration must be a positive number"),
-  language: z.array(z.string().max(50)).min(1, "Select at least one language"),
+  cast: z.preprocess(splitCommaSeparatedString, z.array(z.string())).optional(),
+  duration: z.preprocess((val) => {
+    if (typeof val === "string" || typeof val === "number") {
+      const parsed = parseInt(val.toString(), 10);
+      return isNaN(parsed) ? undefined : parsed;
+    }
+    return undefined;
+  }, z.number().int().positive("Duration must be a positive number")),
+
+  language: z.preprocess(
+    splitCommaSeparatedString,
+    z.array(z.string().max(50).min(1, "Select at least one language"))
+  ),
+
   country: z.string().max(100).optional(),
-  rating: z
-    .number()
-    .min(0, "Minimum rating is 0.0")
-    .max(10, "Maximum rating is 10.0")
-    .optional(),
+  rating: z.preprocess((val) => {
+    if (typeof val === "string" || typeof val === "number") {
+      const parsed = parseInt(val.toString(), 10);
+      return isNaN(parsed) ? undefined : parsed;
+    }
+    return undefined;
+  }, z.number().min(0, "Minimum rating is 0.0").max(10, "Maximum rating is 10.0").optional()),
   featured: z.boolean(),
   posterUrl: z
     .array(z.union([z.string().url(), z.instanceof(File)]))
@@ -69,10 +83,17 @@ export const filmFormSchema = z.object({
       val.map((item) => {
         if (typeof item === "string") return item;
         // custom logic to get preview or placeholder URL from File
-        return URL.createObjectURL(item);
+        return item;
       })
     ),
-  trailerUrl: z.array(z.string().url("Invalid trailer URL")).optional(),
-  videoUrl: z.array(z.string().url("Invalid video URL")).min(1),
-  tags: z.array(z.string()).optional(),
+  trailerUrl: z
+    .preprocess(
+      splitCommaSeparatedString,
+      z.array(z.string().url("Invalid trailer URL"))
+    )
+    .optional(),
+  videoUrl: z.preprocess(
+    splitCommaSeparatedString,
+    z.array(z.string().url("Invalid video URL")).min(1)
+  ),
 });

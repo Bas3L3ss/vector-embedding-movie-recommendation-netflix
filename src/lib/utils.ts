@@ -31,3 +31,12 @@ export function enumToOptions<T extends object>(
       value: key,
     }));
 }
+export const splitCommaSeparatedString = (val: unknown) => {
+  if (typeof val === "string") {
+    return val
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+  }
+  return val;
+};

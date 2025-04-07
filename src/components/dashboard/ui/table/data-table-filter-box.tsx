@@ -91,6 +91,7 @@ export function DataTableFilterBox({
 
   const resetFilter = () => {
     setSelectedOptions(new Set());
+    resetFilters();
   };
 
   return (

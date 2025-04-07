@@ -3,85 +3,35 @@ import { FilmFormData } from "@/types";
 import { Movie } from "@prisma/client";
 import { createFiles, deleteFiles } from "../files";
 import { generateCachedEmbedding } from "../embedding";
-import { revalidateTag } from "next/cache";
-import { redis } from "@/lib/redis";
-
-export const invalidateFilmCache = async (
-  tags: string[] = ["films"],
-  redisKeys: string[] = [],
-  redisPatterns: string[] = ["film:*", "films:*"]
-): Promise<boolean> => {
-  try {
-    tags.forEach((tag) => revalidateTag(tag));
-    console.log("Next.js cache invalidated for tags:", tags);
-
-    if (redisKeys.length > 0) {
-      await redis.del(...redisKeys);
-      console.log("Redis cache invalidated for specific keys:", redisKeys);
-    }
-
-    for (const pattern of redisPatterns) {
-      let cursor = "0";
-      do {
-        const [nextCursor, keys] = await redis.scan(
-          cursor,
-          "MATCH",
-          pattern,
-          "COUNT",
-          "100"
-        );
-        cursor = nextCursor;
-
-        if (keys.length > 0) {
-          await redis.del(...keys);
-          console.log(
-            `Redis cache invalidated for ${keys.length} keys matching pattern:`,
-            pattern
-          );
-        }
-      } while (cursor !== "0");
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Error invalidating cache:", error);
-    return false;
-  }
-};
-
-const supabase = await createClient();
+import { invalidateFilmCache } from "@/lib/invalidate-cache";
 
 export const createFilm = async (
-  data: FilmFormData,
-  posterFiles: File[],
-  trailerUrls: string[] = [],
-  videoUrls: string[] = []
+  data: FilmFormData
 ): Promise<{ success: boolean; film?: any; error?: string }> => {
   let uploadedUrls: string[] = [];
   let createdFilm: any = null;
-
+  const posterFiles = data.posterUrl;
   try {
-    // 1. First create the film record to get the auto-generated ID
+    const supabase = await createClient();
 
     const embedding = await generateCachedEmbedding(
       `${data.title ?? ""}, ${data.description ?? ""}, ${
-        data.genre?.join(" ") ?? ""
-      }, ${data.tags.join(" ")}`
+        data.genre?.length ? data.genre.join(" ") : ""
+      }, ${data.tags?.length ? data.tags.join(" ") : ""}`
     );
 
     const { data: film, error: insertError } = await supabase
-      .from("films")
+      .from("Movie")
       .insert({
         ...data,
         posterUrl: [],
-        trailerUrl: trailerUrls,
-        videoUrl: videoUrls,
         embedding,
+        updatedAt: new Date(),
       })
       .select()
       .single();
 
-    if (insertError || !film) {
+    if (insertError?.message || !film) {
       return {
         success: false,
         error: `Failed to create initial film record: ${
@@ -92,14 +42,19 @@ export const createFilm = async (
 
     createdFilm = film;
     const filmId = film.id.toString();
+    console.log(filmId, createdFilm);
 
     // 2. Upload poster images using the actual film ID
-    uploadedUrls = await createFiles(posterFiles, "posters", filmId);
+    uploadedUrls = await createFiles(
+      posterFiles?.map((f) => f as File) || [],
+      "posters",
+      filmId
+    );
 
-    if (uploadedUrls.length !== posterFiles.length) {
+    if (uploadedUrls.length !== posterFiles?.length) {
       // If not all files were uploaded successfully, clean up and delete the film
       await deleteFiles(uploadedUrls);
-      await supabase.from("films").delete().eq("id", filmId);
+      await supabase.from("Movie").delete().eq("id", filmId);
       return {
         success: false,
         error: "Failed to upload all poster images",
@@ -108,7 +63,7 @@ export const createFilm = async (
 
     // 3. Update the film record with the poster URLs
     const { data: updatedFilm, error: updateError } = await supabase
-      .from("films")
+      .from("Movie")
       .update({
         posterUrl: uploadedUrls,
       })
@@ -119,7 +74,7 @@ export const createFilm = async (
     if (updateError) {
       // If update failed, delete uploaded images and the film record
       await deleteFiles(uploadedUrls);
-      await supabase.from("films").delete().eq("id", filmId);
+      await supabase.from("Movie").delete().eq("id", filmId);
       return {
         success: false,
         error: `Failed to update film with poster URLs: ${updateError.message}`,
@@ -137,13 +92,17 @@ export const createFilm = async (
 
     return { success: true, film: updatedFilm };
   } catch (error) {
+    const supabase = await createClient();
+
+    console.log(createdFilm, createdFilm.title, "hii?");
+
+    if (createdFilm && createdFilm.title) {
+      await supabase.from("Movie").delete().eq("title", createdFilm.title);
+    }
+
     // If any unexpected error occurs, perform cleanup
     if (uploadedUrls.length > 0) {
       await deleteFiles(uploadedUrls);
-    }
-
-    if (createdFilm && createdFilm.id) {
-      await supabase.from("films").delete().eq("id", createdFilm.id);
     }
 
     return {
@@ -162,6 +121,7 @@ export const updateFilm = async (
 ): Promise<{ success: boolean; film?: any; error?: string }> => {
   let newUploadedUrls: string[] = [];
 
+  const supabase = await createClient();
   try {
     const filmId = initialData.id;
 
@@ -199,7 +159,7 @@ export const updateFilm = async (
     );
 
     const { data: updatedFilm, error: updateError } = await supabase
-      .from("films")
+      .from("Movie")
       .update({
         ...newData,
         posterUrl: updatedPosterUrls,
@@ -241,7 +201,7 @@ export const updateFilm = async (
 
     // Attempt to restore original data if we have it
     try {
-      await supabase.from("films").update(initialData).eq("id", initialData.id);
+      await supabase.from("Movie").update(initialData).eq("id", initialData.id);
     } catch (rollbackError) {
       console.error("Failed to rollback film data:", rollbackError);
     }
@@ -262,7 +222,7 @@ export const deleteFilm = async (
 
   try {
     const { data: film, error: fetchError } = await supabase
-      .from("films")
+      .from("Movie")
       .select("posterUrl, genre, featured")
       .eq("id", filmId)
       .single();
@@ -275,7 +235,7 @@ export const deleteFilm = async (
     }
 
     const { error: deleteError } = await supabase
-      .from("films")
+      .from("Movie")
       .delete()
       .eq("id", filmId);
 

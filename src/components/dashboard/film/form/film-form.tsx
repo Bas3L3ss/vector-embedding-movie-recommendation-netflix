@@ -21,6 +21,7 @@ import { enumToOptions } from "@/lib/utils";
 import { Genre } from "@prisma/client";
 import { MultiSelect } from "@/components/ui/multi-select";
 const genreOptions = enumToOptions(Genre);
+
 export default function FilmForm({
   initialData,
 }: {
@@ -30,7 +31,7 @@ export default function FilmForm({
     useFilmForm({ initialData });
 
   return (
-    <Card className="mx-auto w-full">
+    <Card className="mx-auto w-full  mt-5 bg-[#1e1e1e] border border-[#333] text-white shadow-md">
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -223,7 +224,7 @@ export default function FilmForm({
                 <FormLabel className="text-base">Poster Images</FormLabel>
                 <Button
                   type="button"
-                  variant="outline"
+                  className="bg-red-600 hover:bg-red-700 text-white"
                   size="sm"
                   onClick={addImageField}
                   disabled={form.watch("posterUrl").length >= 5}
@@ -296,7 +297,7 @@ export default function FilmForm({
                           disabled={form.watch("posterUrl").length <= 2}
                           className="text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-4 w-4 text-red-100" />
                           <span className="sr-only">Remove</span>
                         </Button>
                       </div>
@@ -343,23 +344,12 @@ export default function FilmForm({
               )}
             />
 
-            {/* Tags */}
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tags</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Thriller, Indie" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="flex justify-end gap-3 pt-4">
-              <Button type="submit" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="bg-red-600 hover:bg-red-700 text-white"
+                disabled={isSubmitting}
+              >
                 {isSubmitting
                   ? "Submitting..."
                   : initialData

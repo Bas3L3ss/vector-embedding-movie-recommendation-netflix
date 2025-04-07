@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { filmFormSchema } from "@/schema";
 import { z } from "zod";
 import { appendFilmDataToFormData } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 
 export type FormValues = z.infer<typeof filmFormSchema>;
 
@@ -15,7 +14,6 @@ const useFilmForm = ({
   initialData: Partial<FormValues> | null;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
   const defaultValues = useMemo(
     () => ({
       title: initialData?.title || "",
@@ -110,8 +108,13 @@ const useFilmForm = ({
       }
 
       const result = await response.json();
-      toast.success(`Film ${initialData ? "updated" : "created"} successfully`);
+      toast.success(
+        `Film ${
+          initialData ? "updated" : "created"
+        } successfully, redirecting...`
+      );
       console.log(result);
+      window.location.reload();
     } catch (error) {
       console.error("Error submitting film:", error);
       toast.error("Something went wrong");

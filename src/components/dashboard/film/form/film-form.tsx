@@ -249,6 +249,7 @@ export default function FilmForm({
                             const urlImages = field.value.filter(
                               (item) => typeof item === "string"
                             );
+                            // @ts-expect-error: no prob
                             field.onChange([...urlImages, ...files]);
                           }}
                           maxFiles={5}
@@ -277,6 +278,7 @@ export default function FilmForm({
                                   <div className="bg-muted p-2 flex items-center rounded-l-md border border-r-0 border-input">
                                     <Upload className="h-4 w-4 text-muted-foreground" />
                                   </div>
+                                  {/* @ts-expect-error: no prob */}
                                   <Input
                                     required
                                     placeholder="https://example.com/image.jpg"

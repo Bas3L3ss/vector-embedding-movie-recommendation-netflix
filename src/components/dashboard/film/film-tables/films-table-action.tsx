@@ -17,10 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import DataTableAddFilm from "../../ui/table/data-table-add-film";
+import { toast } from "sonner";
 
 export default function FilmTableAction({
   selectedFilmIds,
-  setSelectedFilmIds,
 }: {
   selectedFilmIds: string[];
   setSelectedFilmIds: React.Dispatch<React.SetStateAction<string[]>>;
@@ -36,6 +36,10 @@ export default function FilmTableAction({
   const [isDeletingFilms, setIsDeletingFilms] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const forceRefreshPage = () => {
+    // Hard refresh the current page
+    window.location.reload();
+  };
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -54,8 +58,12 @@ export default function FilmTableAction({
         throw new Error("Failed to delete films");
       }
 
-      const result = await response.json();
-      console.log("Delete response:", result);
+      toast.success("Film records are deleted", {
+        action: {
+          label: "Refresh",
+          onClick: forceRefreshPage,
+        },
+      });
     } catch (error) {
       console.error("Failed to delete products:", error);
     } finally {

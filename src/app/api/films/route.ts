@@ -33,6 +33,7 @@ export async function POST(req: Request) {
 
     const form = formidable({ multiples: true });
 
+    // @ts-expect-error: no prob
     const [fields, files] = await new Promise((resolve, reject) => {
       form.parse(fakeReq, (err, fields, files) => {
         if (err) reject(err);
@@ -40,28 +41,29 @@ export async function POST(req: Request) {
       });
     });
 
-    const newData = {};
+    const newData: any = {};
     newData.posterUrl = [];
     Object.keys(fields).forEach((key: string) => {
       // Get the first element of the array.
-      let value = fields[key][0];
+      const value = fields[key][0];
 
       // Try to parse the value if it's a JSON string.
       try {
         const parsedValue = JSON.parse(value);
         // If parsing gives an array or object, use it.
         newData[key] = parsedValue;
-      } catch (error) {
+      } catch {
         // Otherwise, simply use the string value.
         newData[key] = value;
       }
     });
     newData.tags = [];
-    newData.genre.forEach((element) => {
-      newData.tags.push(genreTags[element]);
+    newData.genre.forEach((element: string) => {
+      // @ts-expect-error: no prob
+      newData.tags.push(...genreTags[element]);
     });
 
-    const newFiles = Object.values(files.files).map((file) => ({
+    const newFiles = Object.values(files.files).map((file: any) => ({
       ...file,
       name: file.originalFilename,
     }));

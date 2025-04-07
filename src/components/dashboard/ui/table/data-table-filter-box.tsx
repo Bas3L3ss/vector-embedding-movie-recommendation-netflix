@@ -153,13 +153,13 @@ export function DataTableFilterBox({
                   >
                     <div
                       className={cn(
-                        "mr-2 flex h-4 w-4 items-center justify-center border-red-900 rounded-sm border border-primary",
+                        "mr-2 flex h-4 w-4 items-center justify-center border-red-900 rounded-sm border  ",
                         selectedOptions.has(option.value)
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible"
                       )}
                     >
-                      <CheckIcon className="h-4 w-4" aria-hidden="true" />
+                      <CheckIcon className="h-3 w-3" aria-hidden="true" />
                     </div>
                     {option.icon && (
                       <option.icon

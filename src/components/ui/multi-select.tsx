@@ -73,13 +73,15 @@ export function MultiSelect({
                     className="flex items-center gap-1 px-2 py-1"
                   >
                     {getLabel(value)}
-                    <X
-                      className="h-3 w-3 cursor-pointer opacity-70 hover:opacity-100"
+                    <button
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         handleRemove(value);
                       }}
-                    />
+                    >
+                      <X className="h-3 w-3 cursor-pointer opacity-70 hover:opacity-100 block" />
+                    </button>
                   </Badge>
                 ))}
               </div>

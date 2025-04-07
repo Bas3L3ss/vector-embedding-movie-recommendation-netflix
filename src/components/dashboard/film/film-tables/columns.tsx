@@ -34,6 +34,38 @@ export const columns: ColumnDef<Movie>[] = [
     enableHiding: false,
   },
 
+  // Actions
+  {
+    id: "actions",
+    header: "ACTIONS",
+
+    cell: ({ row }) => {
+      const filmId = row.original.id;
+
+      return (
+        <div className="px-2 py-1">
+          <CellAction
+            // @ts-expect-error: no prob
+            filmId={filmId as string}
+          />
+        </div>
+      );
+    },
+  }, // Actions
+  {
+    id: "ID",
+    header: "ID",
+
+    cell: ({ row }) => {
+      const filmId = row.original.id;
+
+      return (
+        <div className="px-2 py-1">
+          <span>{filmId}</span>
+        </div>
+      );
+    },
+  },
   // Poster
   {
     accessorKey: "posterUrl",
@@ -191,26 +223,6 @@ export const columns: ColumnDef<Movie>[] = [
           ) : (
             <span className="text-gray-400">-</span>
           )}
-        </div>
-      );
-    },
-  },
-
-  // Actions
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const filmId = row.original.id;
-
-      return (
-        <div className="px-2 py-1">
-          <CellAction
-            // @ts-expect-error: no prob
-            filmId={filmId as string}
-            onUpdate={() => {
-              window.location.assign(`/data/${filmId}`);
-            }}
-          />
         </div>
       );
     },

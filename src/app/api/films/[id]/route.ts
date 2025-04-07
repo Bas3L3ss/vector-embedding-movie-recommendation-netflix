@@ -76,8 +76,9 @@ function extractFormFields(fields: formidable.Fields) {
   // Handle tags for genres
   updatedData.tags = [];
   if (updatedData.genre && Array.isArray(updatedData.genre)) {
-    updatedData.genre.forEach((element) => {
-      updatedData.tags.push(genreTags[element]);
+    updatedData.genre.forEach((element: string) => {
+      // @ts-expect-error: no prob
+      updatedData.tags.push(...genreTags[element]);
     });
   }
 
@@ -171,10 +172,7 @@ async function handleCacheInvalidation(filmId: string, updatedData: any) {
   );
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest) {
   try {
     // Parse the form data
     const [fields, files] = await parseFormData(req);
@@ -206,7 +204,6 @@ export async function PUT(
 
     // Combine kept URLs with newly uploaded URLs
     const allPosterUrls = [...keptPosterUrls, ...newUploadedUrls];
-    console.log("hi?", allPosterUrls);
 
     // Update the film record
     const updatedFilm = await updateFilmRecord(

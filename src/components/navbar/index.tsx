@@ -175,7 +175,10 @@ const NavBar = () => {
                         <DropdownMenuSeparator className="bg-red-700" />
                         <DropdownMenuItem
                           className="hover:bg-red-800! hover:text-white! cursor-pointer"
-                          onClick={() => signout()}
+                          onClick={() => {
+                            signout();
+                            window.location.reload();
+                          }}
                         >
                           Sign out
                         </DropdownMenuItem>

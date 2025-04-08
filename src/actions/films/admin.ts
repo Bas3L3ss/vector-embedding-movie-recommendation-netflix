@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { FilmFormData } from "@/types";
-import { Movie } from "@prisma/client";
 import { createFiles, deleteFiles } from "../files";
 import { generateCachedEmbedding } from "../embedding";
 import { invalidateFilmCache } from "@/lib/invalidate-cache";
@@ -101,106 +100,6 @@ export const createFilm = async (
     // If any unexpected error occurs, perform cleanup
     if (uploadedUrls.length > 0) {
       await deleteFiles(uploadedUrls);
-    }
-
-    return {
-      success: false,
-      error: `Unexpected error: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-    };
-  }
-};
-
-export const updateFilm = async (
-  initialData: Movie,
-  newData: FilmFormData
-): Promise<{ success: boolean; film?: any; error?: string }> => {
-  let newUploadedUrls: string[] = [];
-
-  const supabase = await createClient();
-  try {
-    const filmId = initialData.id;
-    const newPosterFiles = newData.posterUrl;
-    // Find poster URLs to delete (those in initial data but not in kept URLs)
-    const urlsToDelete = (initialData.posterUrl || []).filter(
-      (url) => !initialData.posterUrl.includes(url)
-    );
-
-    // Upload new poster files if any
-    if (newPosterFiles && newPosterFiles.length > 0) {
-      newUploadedUrls = await createFiles(
-        newPosterFiles,
-        "posters",
-        filmId.toString()
-      );
-
-      if (newUploadedUrls.length !== newPosterFiles.length) {
-        await deleteFiles(newUploadedUrls);
-        return {
-          success: false,
-          error: "Failed to upload all new poster images",
-        };
-      }
-    }
-
-    // Combine kept URLs with newly uploaded URLs
-    const updatedPosterUrls = [...initialData.posterUrl, ...newUploadedUrls];
-
-    // Update film record
-
-    const embedding = await generateCachedEmbedding(
-      `${newData.title ?? ""}, ${newData.description ?? ""}, ${
-        newData.genre?.join(" ") ?? ""
-      }, ${newData.tags.join(" ")}`
-    );
-
-    const { data: updatedFilm, error: updateError } = await supabase
-      .from("Movie")
-      .update({
-        ...newData,
-        posterUrl: updatedPosterUrls,
-        embedding,
-      })
-      .eq("id", filmId)
-      .select()
-      .single();
-
-    if (updateError) {
-      // If update failed, delete newly uploaded images
-      if (newUploadedUrls.length > 0) {
-        await deleteFiles(newUploadedUrls);
-      }
-
-      return {
-        success: false,
-        error: `Failed to update film: ${updateError.message}`,
-      };
-    }
-
-    // Delete unused poster images after successful update
-    if (urlsToDelete.length > 0) {
-      await deleteFiles(urlsToDelete);
-    }
-
-    const cacheKeys = newData.genre.map((g) => `film:${g}`);
-
-    invalidateFilmCache(
-      ["films", ...cacheKeys, ...(newData.featured ? ["film-featured"] : [])],
-      [`film:${filmId}`]
-    );
-    return { success: true, film: updatedFilm };
-  } catch (error) {
-    // If any unexpected error occurs, clean up new uploads
-    if (newUploadedUrls.length > 0) {
-      await deleteFiles(newUploadedUrls);
-    }
-
-    // Attempt to restore original data if we have it
-    try {
-      await supabase.from("Movie").update(initialData).eq("id", initialData.id);
-    } catch (rollbackError) {
-      console.error("Failed to rollback film data:", rollbackError);
     }
 
     return {
